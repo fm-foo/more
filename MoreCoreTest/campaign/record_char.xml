@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+
+	<windowclass name="charsheet">
+		<frame>charsheet</frame>
+		<sizelimits>
+			<size width="600" height="600" />
+			<minimum width="600" height="600" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_npc</minimize>
+		<tooltip field="name" />
+		<softclose />
+		<export>character</export>
+		<sheetdata>
+			<sub_charsheet_overview name="overview" />
+
+			<sub_charsheet name="more">
+				<class>charsheet_more</class>
+			</sub_charsheet> 
+			<sub_charsheet name="main">
+				<class>charsheet_main</class>
+			</sub_charsheet>
+			<sub_charsheet name="abilities">
+				<class>charsheet_abilities</class>
+			</sub_charsheet>
+			<sub_charsheet name="inventory">
+				<class>charsheet_inventory</class>
+			</sub_charsheet>
+			<sub_charsheet name="notes">
+				<class>charsheet_notes</class>
+			</sub_charsheet>
+
+			<tabs_charsheet>
+<!--   Added new MoreCore Tab to the Character Sheet -->
+				<tab>
+<!--   Create transparent PNG file with text for the new Tab. File lives under \graphics\tabs -->
+					<icon>tab_more</icon>
+					<subwindow>more</subwindow>
+				</tab> 
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_abilities</icon>
+					<subwindow>abilities</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_inventory</icon>
+					<subwindow>inventory</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_notes</icon>
+					<subwindow>notes</subwindow>
+				</tab>
+				<activate>1</activate>
+			</tabs_charsheet>
+		
+			<close_charsheet />
+			<resize_charsheet />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="charsheet_overview">
+		<script>
+
+			function onDrop(x, y, draginfo)
+						Debug.console("drag1: ", draginfo);
+				if draginfo.isType("shortcut") then
+					local sClass, sRecord = draginfo.getShortcutData();
+				--[[	Debug.console("draginfo: ", draginfo);
+						Debug.console("onDrop: ", onDrop);
+						Debug.console("sClass: ", sClass);
+						Debug.console("sRecord: ", sRecord);
+						Debug.console("getDatabaseNode(): ", getDatabaseNode());	]]
+
+						Debug.console("DB.getValue: ", DB.getValue(draginfo.getDatabaseNode(), "name", ""));
+						Debug.console("getDescription: ", draginfo.getDescription());
+
+					local nodeChar = getDatabaseNode();
+					if StringManager.contains({"pcclass"}, sClass) then
+						Debug.console("pcclass!");
+						CharManagerMC.addClassDB(nodeChar, sClass, sRecord);
+						return true;
+					end
+				end
+			end
+
+		</script>
+		<sheetdata>
+			<genericcontrol name="leftanchor">
+				<anchored position="insidetopleft" offset="0,0" width="0" height="0" />
+				<disabled />
+			</genericcontrol>
+			<genericcontrol name="rightanchor">
+				<anchored position="insidetopright" offset="0,0" width="0" height="0" />
+				<disabled />
+			</genericcontrol>
+
+			<picture_charsheet name="portrait" />
+			<button_charactivate_charsheet name="speak" />
+			
+			<frame_char name="overviewframe">
+				<anchored to="rightanchor" height="90">
+					<top />
+					<left parent="leftanchor" relation="relative" />
+					<right relation="relative" offset="-170"/>
+				</anchored>
+			</frame_char>
+
+			<string_labeled name="name">
+				<anchored to="overviewframe" position="insidetopleft" offset="10,10" height="20" width="130" />
+				<labelres>char_label_name</labelres>
+			</string_labeled>
+			<string_labeled name="origin">
+				<anchored to="overviewframe" position="insidetopleft" offset="150,10" height="20" width="130" />
+				<labelres>char_label_origin</labelres>
+			</string_labeled>
+			
+			<string_labeled name="identity">
+				<anchored to="overviewframe" position="insidetopleft" offset="10,40" height="20" width="130" />
+				<labelres>char_label_identity</labelres>
+			</string_labeled>
+			<string_labeled name="theme">
+				<anchored to="overviewframe" position="insidetopleft" offset="150,40" height="20" width="130" />
+				<labelres>char_label_theme</labelres>
+			</string_labeled>
+			
+			
+			<!-- Hero Frame by damned -->
+			<!-- Frame Co-ordinates  -->
+			<frame_char name="heroframe">
+				<bounds>-230,0,150,90</bounds>
+			</frame_char>
+
+			<!-- Generic Benny/Fate/Hero/Luck Points  -->
+			<!-- number_pool is defined in campaign/template_campaign.xml  -->
+			<number_pool name="hero">
+				<anchored to="heroframe" position="insidetopright" offset="18,60" width="18" />
+				<description>
+					<text>Fabula</text>
+				</description>
+			<!-- Script/Function for Using Benny/Fate/Hero/Luck Points  -->
+			<!-- Checks that there is a Hero Point available  -->
+			<!-- Gets the Actors name  -->
+			<!-- Gets the Hero Point name (player editable)  -->
+			<!-- Displays that Actors is using a Hero Point  -->
+			<!-- Decrements the Hero Point pool  -->
+				<script>
+					function onDoubleClick(x, y)
+						if getValue() > 0 then
+							local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+							Debug.console("rActor: ");
+							Debug.console(rActor);
+							local nodeWin = window.getDatabaseNode();
+							Debug.console("nodeWin: ");
+							Debug.console(nodeWin);
+							local sHeroType = nodeWin.getChild("pc_hero_points").getValue();
+							Debug.console("sHeroType: ");
+							Debug.console(sHeroType);
+							local msg = {font = "msgfont", icon = "heropoints"};
+							msg.text = rActor.sName .. " is using a " .. sHeroType;
+							Comm.deliverChatMessage(msg);
+							setValue(getValue()-1);
+						end
+						return true;
+					end
+				</script>
+				<default>0</default>
+			</number_pool>
+
+			<!-- Label Text is found in /strings/strings_morecore.xml -->
+			<!-- User Editable Label -->
+			<string_useredit name="pc_label_hero" source="pc_hero_points">
+					<anchored to="heroframe" position="insidetopleft" offset="13,60" width="80" />
+					<default>Fabula Point</default>
+					<tooltip textres="label_heropoints" />
+			</string_useredit>
+
+			<number_pool name="exp">
+				<anchored to="heroframe" position="insidetopright" offset="18,37" width="18" />
+				<description>
+					<text>Exp. points</text>
+				</description>
+				<default>0</default>
+			</number_pool>
+			
+			<string_useredit name="pc_label_exp" source="pc_exp_points">
+					<anchored to="heroframe" position="insidetopleft" offset="13,37" width="80" />
+					<default>Exp. Points</default>
+					<tooltip textres="label_heropoints" />
+			</string_useredit>
+			
+			<number_pool name="level">
+				<anchored to="heroframe" position="insidetopright" offset="18,14" width="18" />
+				<description>
+					<text>Level</text>
+				</description>
+				<default>0</default>
+			</number_pool>
+			
+			<string_useredit name="pc_label_level" source="pc_exp_level">
+					<anchored to="heroframe" position="insidetopleft" offset="13,14" width="80" />
+					<default>Level</default>
+					<tooltip textres="label_heropoints" />
+			</string_useredit>
+
+		</sheetdata>
+	</windowclass>
+	
+
+	<windowclass name="charsheet1">
+		<frame>charsheet</frame>
+		<placement>
+			<size width="600" height="600" />
+		</placement>
+		<sizelimits>
+			<!--<maximum width="625" />-->
+			<minimum width="600" height="600" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_npc</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<softclose />
+		<playercontrol />
+		<export>character</export>
+		<script>
+			function onInit()
+				if User.isLocal() then
+					speak.setVisible(false);
+					portrait.setVisible(false);
+					localportrait.setVisible(true);
+				end
+			end
+
+			function onDrop(x, y, draginfo)
+						Debug.console("drag1: ", draginfo);
+				if draginfo.isType("shortcut") then
+					local sClass, sRecord = draginfo.getShortcutData();
+				--[[	Debug.console("draginfo: ", draginfo);
+						Debug.console("onDrop: ", onDrop);
+						Debug.console("sClass: ", sClass);
+						Debug.console("sRecord: ", sRecord);
+						Debug.console("getDatabaseNode(): ", getDatabaseNode());	]]
+
+						Debug.console("DB.getValue: ", DB.getValue(draginfo.getDatabaseNode(), "name", ""));
+						Debug.console("getDescription: ", draginfo.getDescription());
+
+					local nodeChar = getDatabaseNode();
+					if StringManager.contains({"pcclass"}, sClass) then
+						Debug.console("pcclass!");
+						CharManagerMC.addClassDB(nodeChar, sClass, sRecord);
+						return true;
+					end
+				end
+			end
+
+		</script>
+		<sheetdata>
+			<button_charactivate name="speak">
+				<bounds>-41,30,23,22</bounds>
+			</button_charactivate>
+		
+			<tokenfield name="token">
+				<bounds>-86,23,40,40</bounds>
+				<empty>token_empty</empty>
+				<tooltip textres="char_tooltip_token" />
+				<script>
+					function onDoubleClick(x, y)
+						CombatManager.openMap(window.getDatabaseNode());
+					end
+				</script>
+			</tokenfield>
+		
+			<genericcontrol>
+				<bounds>-137,21,45,45</bounds>
+				<icon>charlist_base</icon>
+				<disabled />
+			</genericcontrol>
+			<portrait_charlocal name="localportrait">
+				<bounds>-137,21,45,45</bounds>
+				<invisible />
+			</portrait_charlocal>
+			<portrait_char name="portrait">
+				<bounds>-137,21,45,45</bounds>
+			</portrait_char>
+			
+			<frame_char name="overviewframe">
+				<bounds>15,20,-270,45</bounds>
+			</frame_char>
+			<string_labeled name="name">
+				<anchored to="overviewframe" position="insidetopleft" offset="10,10" height="20" width="95" />
+				<labelres>char_label_name</labelres>
+			</string_labeled>
+			<string_labeled name="pcclass">
+				<anchored to="overviewframe" position="insidetopleft" offset="110,10" height="20" width="95" />
+				<labelres>char_label_class</labelres>
+			</string_labeled>
+
+<!-- Add Class Level -->
+			<totnumber name="level" source="pcclasslevel" >
+				<anchored to="pcclass" position="right" offset="7,-4" width="18" />
+				<tooltip text="Character Level" />
+				<script>
+					function onValueChanged()
+							local nodeChar = getDatabaseNode().getParent();
+								Debug.console("nodeChar!", nodeChar);
+							local sClass = nodeChar.getChild("pcclass").getValue();
+								Debug.console("pcclass!", sClass);
+							local nodesRecord = nodeChar.pcclasslink;
+							local sClassType, sRecord = DB.getValue(nodeChar,"pcclasslink","","");
+								Debug.console("sRecord!", sRecord);
+							CharManagerMC.addClassLevel(nodeChar, sClass, sRecord);
+					end
+				</script>
+			</totnumber>
+			<!-- Add Class Link -->
+			<linkfield name="pcclasslink" source="pcclasslink">
+				<anchored to="pcclass" position="right" offset="30,0" width="20" />
+				<description field="pcclass" />
+				<closetoggle />
+				<invisible />
+				<script>
+					function onInit()
+						onValueChanged();
+					end
+					function onValueChanged()
+						if isEmpty() then
+							setVisible(false);
+						else
+							setVisible(true);
+						end
+					end
+				</script>
+			</linkfield>
+			
+			
+			<!-- Hero Frame by damned -->
+			<!-- Frame Co-ordinates  -->
+			<frame_char name="heroframe">
+				<bounds>-270,20,130,45</bounds>
+			</frame_char>
+			<!-- Generic Benny/Fate/Hero/Luck Points  -->
+			<!-- number_pool is defined in campaign/template_campaign.xml  -->
+			<number_pool name="hero">
+				<anchored to="heroframe" position="insidetopright" offset="14,14" width="18" />
+				<description>
+					<text>Hero</text>
+				</description>
+			<!-- Script/Function for Using Benny/Fate/Hero/Luck Points  -->
+			<!-- Checks that there is a Hero Point available  -->
+			<!-- Gets the Actors name  -->
+			<!-- Gets the Hero Point name (player editable)  -->
+			<!-- Displays that Actors is using a Hero Point  -->
+			<!-- Decrements the Hero Point pool  -->
+				<script>
+					function onDoubleClick(x, y)
+						if getValue() > 0 then
+							local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+							Debug.console("rActor: ");
+							Debug.console(rActor);
+							local nodeWin = window.getDatabaseNode();
+							Debug.console("nodeWin: ");
+							Debug.console(nodeWin);
+							local sHeroType = nodeWin.getChild("pc_hero_points").getValue();
+							Debug.console("sHeroType: ");
+							Debug.console(sHeroType);
+							local msg = {font = "msgfont", icon = "heropoints"};
+							msg.text = rActor.sName .. " is using a " .. sHeroType;
+							Comm.deliverChatMessage(msg);
+							setValue(getValue()-1);
+						end
+						return true;
+					end
+				</script>
+				<default>0</default>
+			</number_pool>
+
+			<!-- Label Text is found in /strings/strings_morecore.xml -->
+			<!-- User Editable Label -->
+		<string_useredit name="pc_label_hero" source="pc_hero_points">
+				<anchored to="heroframe" position="insidetopleft" offset="8,14" width="70" />
+				<default>Fabula Point</default>
+				<tooltip textres="label_heropoints" />
+		</string_useredit>
+			
+<!--   Added new MoreCore Tab to the Character Sheet -->
+<!--   "more" is a reference only. charsheet_more refers to <windowclass name="charsheet_more"> which is found in the \campaign\record_char_more.xml file  -->
+			<subwindow name="more">
+				<bounds>0,65,-1,-20</bounds>
+				<class>charsheet_more</class>
+			</subwindow> 
+			<subwindow name="main">
+				<bounds>0,65,-1,-20</bounds>
+				<class>charsheet_main</class>
+			</subwindow>
+			<subwindow name="abilities">
+				<bounds>0,65,-1,-20</bounds>
+				<class>charsheet_abilities</class>
+			</subwindow>
+			<subwindow name="inventory">
+				<bounds>0,65,-1,-20</bounds>
+				<class>charsheet_inventory</class>
+			</subwindow>
+			<subwindow name="notes">
+				<bounds>0,65,-1,-20</bounds>
+				<class>charsheet_notes</class>
+			</subwindow>
+
+			<tabs_charsheet>
+<!--   Added new MoreCore Tab to the Character Sheet -->
+				<tab>
+<!--   Create transparent PNG file with text for the new Tab. File lives under \graphics\tabs -->
+					<icon>tab_more</icon>
+					<subwindow>more</subwindow>
+				</tab> 
+				<tab>
+<!--   Create transparent PNG file with text for the new Tab. File lives under \graphics\tabs -->
+					<icon>tab_moredata</icon>
+					<subwindow>moredata</subwindow>
+				</tab> 
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_abilities</icon>
+					<subwindow>abilities</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_inventory</icon>
+					<subwindow>inventory</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_notes</icon>
+					<subwindow>notes</subwindow>
+				</tab>
+				<activate>1</activate>
+			</tabs_charsheet>
+			<helper_mc_charsheet />
+		
+			<close_charsheet />
+		</sheetdata>
+	</windowclass>
+
+	<template name="picture_charsheet">
+		<genericcontrol>
+			<anchored to="rightanchor" width="45" height="45">
+				<top />
+				<right relation="relative" offset="0" postoffset="5" />
+			</anchored>
+			<script file="campaign/scripts/picture_charsheet.lua" />
+			<!-- <portraitsize>45</portraitsize> -->
+			<!-- <widgetsize>20</widgetsize> -->
+		</genericcontrol>
+	</template>
+	<template name="button_charactivate_charsheet">
+		<button_charactivate>
+			<anchored to="rightanchor" width="23" height="22">
+				<top offset="20" />
+				<right relation="relative" offset="66" postoffset="-2" />
+			</anchored>
+		</button_charactivate>
+	</template>
+
+
+</root>

@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<!-- 2023-08-29 - (Short Release) -->
+	<template name="helper_charselect">
+		<help_charselect>
+			<urlres>help_library_charselect</urlres>
+
+		</help_charselect>
+	</template>
+	<template name="anchor_title_charselect">
+		<genericcontrol>
+			<anchored height="0">
+				<top parent="title" anchor="bottom" offset="0" />
+				<left parent="" anchor="left" offset="30" />
+				<right parent="" anchor="right" offset="-30" />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="button_iadd_campaign">
+		<button_iadd name="list_iadd">
+			<anchored to="rightanchor">
+				<top />
+				<right anchor="left" relation="relative" offset="-5" />
+			</anchored>
+			<target>list</target>
+			<script>
+				function onInit()
+					if super and super.onInit then
+						super.onInit();
+					end
+				end
+			</script>
+		</button_iadd>
+	</template>
+	<template name="button_iedit_campaign">
+		<button_iedit name="list_iedit">
+			<anchored to="rightanchor">
+				<top />
+				<right anchor="left" relation="relative" offset="-5" />
+			</anchored>
+			<edittarget>list</edittarget>
+			<script>
+				function onInit()
+					if super and super.onInit then
+						super.onInit();
+					end
+				end
+			</script>
+		</button_iedit>
+	</template>
+	<template name="anchor_reftitle">
+		<genericcontrol>
+			<anchored height="0">
+				<top parent="reftitle" anchor="bottom" offset="3" />
+				<left parent="" anchor="left" offset="35" />
+				<right parent="" anchor="right" offset="-40" />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="header_reftablegroup">
+		<genericcontrol name="headeranchor">
+			<anchored to="contentanchor" height="20" width="0">
+				<top anchor="bottom" relation="relative" offset="0" />
+				<left offset="30" />
+			</anchored>
+
+		</genericcontrol>
+	</template>
+	<template name="label_reftable">
+		<stringcontrol>
+			<anchored to="headeranchor" width="60">
+				<left anchor="right" relation="relative" />
+				<top />
+			</anchored>
+			<font>reference-header</font>
+			<multilinespacing>20</multilinespacing>
+			<readonly />
+
+		</stringcontrol>
+	</template>
+	<template name="filter_ref">
+		<filter>
+			<anchored height="20">
+				<left parent="contentanchor" offset="20" />
+				<right parent="contentanchor" />
+				<bottom offset="-25" />
+			</anchored>
+
+		</filter>
+	</template>
+	<template name="list_ref">
+		<windowlist>
+			<anchored to="contentanchor">
+				<top anchor="bottom" relation="relative" offset="20" />
+				<left />
+				<right />
+				<bottom parent="" offset="-65" />
+			</anchored>
+			<frame name="groupbox" offset="15,15,20,15" />
+			<child></child>
+			<child><backcolor>1A40301E</backcolor></child>
+			<filter control="filter" />
+			<filteron control="name" />
+
+		</windowlist>
+	</template>
+	<template name="list_reftablegroup">
+		<windowlist>
+			<anchored to="contentanchor">
+				<top anchor="bottom" relation="relative" offset="10" />
+				<left />
+				<right />
+				<bottom parent="" offset="-70" />
+			</anchored>
+			<frame name="groupbox" offset="15,15,20,15" />
+			<readonly />
+
+		</windowlist>
+	</template>
+	<template name="scrollbar_reftablegroup">
+		<scrollbar>
+			<anchored to="grouplist" position="right" offset="-5,-5" />
+			<target>grouplist</target>
+
+		</scrollbar>
+	</template>
+	<template name="list_reftablegroupitems">
+		<windowlist>
+			<anchored>
+				<top parent="topanchor" anchor="bottom" relation="relative" offset="2" />
+				<left />
+				<right />
+			</anchored>
+			<noscroll />
+			<child></child>
+			<child><backcolor>1A40301E</backcolor></child>
+			<readonly />
+			<script file="ref/scripts/ref_list.lua" />
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</windowlist>
+	</template>
+	<template name="filter_reftable">
+		<filter>
+			<anchored height="20">
+				<left parent="contentanchor" offset="85" />
+				<right parent="contentanchor" />
+				<bottom offset="-25" />
+			</anchored>
+			<target>grouplist,list</target>
+			<script file="common/scripts/filter_grouped.lua" />
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</filter>
+	</template>
+	<template name="button_reftable_expand">
+		<button_expand>
+			<anchored>
+				<left parent="contentanchor" />
+				<bottom offset="-25" />
+			</anchored>
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</button_expand>
+	</template>
+	<template name="button_reftable_collapse">
+		<button_collapse>
+			<anchored>
+				<left parent="contentanchor" offset="30" />
+				<bottom offset="-25" />
+			</anchored>
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</button_collapse>
+	</template>
+	<template name="frame_groupdesc">
+		<genericcontrol>
+			<anchored height="25">
+				<top parent="topanchor" anchor="bottom" />
+				<left offset="10" />
+				<right />
+			</anchored>
+			<frame name="headerref" offset="10,0,0,0" />
+			<script>
+
+				function onClickDown(button, x, y)
+					return true;
+				end
+				function onClickRelease(button, x, y)
+					window.description.onClickRelease(button, x, y);
+					return true;
+				end
+			</script>
+		</genericcontrol>
+	</template>
+	<template name="string_groupdesc">
+		<stringfield>
+			<anchored height="20">
+				<top parent="topanchor" anchor="bottom" relation="relative" offset="5" />
+				<left offset="15" />
+			</anchored>
+			<font>reference-groupdesc</font>
+			<static />
+			<script file="ref/scripts/ref_groupdesc.lua" />
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</stringfield>
+	</template>
+	<template name="string_groupsubdesc">
+		<stringfield>
+			<anchored to="description" position="right" offset="20,0" />
+			<font>reference-groupdesc</font>
+			<static />
+			<script>
+
+				function onClickDown(button, x, y)
+					return true;
+				end
+				function onClickRelease(button, x, y)
+					window.description.onClickRelease(button, x, y);
+					return true;
+				end
+			</script>
+		</stringfield>
+	</template>
+	<template name="ft_reftablefooter">
+		<basicft>
+			<anchored>
+				<top parent="list" anchor="bottom" relation="relative" />
+				<left offset="25" />
+				<right offset="-25" />
+			</anchored>
+			<readonly />
+
+		</basicft>
+	</template>
+	<template name="string_reftable">
+		<simplestring>
+			<anchored to="reftableanchor" width="60">
+				<left anchor="right" relation="relative" />
+				<top />
+			</anchored>
+			<multilinespacing>20</multilinespacing>
+			<nodrag />
+			<nodragselect />
+			<readonly />
+
+		</simplestring>
+	</template>
+	<template name="number_reftable">
+		<number_text_noframe_static>
+			<anchored to="reftableanchor" width="60" height="20">
+				<left anchor="right" relation="relative" />
+				<top />
+			</anchored>
+			<hideonvalue>0</hideonvalue>
+			<nodrag />
+
+		</number_text_noframe_static>
+	</template>
+	<template name="stringc_reftable">
+		<simplestringc>
+			<anchored to="reftableanchor" width="60">
+				<left anchor="right" relation="relative" />
+				<top />
+			</anchored>
+			<multilinespacing>20</multilinespacing>
+			<nodrag />
+			<nodragselect />
+			<readonly />
+
+		</simplestringc>
+	</template>
+	<template name="stringc_reftable_linked">
+		<stringc_reftable>
+
+		</stringc_reftable>
+	</template>
+	<template name="number_ref_weightwithsuffix">
+		<hn>
+			<script>
+
+				function onValueChanged()
+					local nDecimal = 3;
+					local nValue = math.floor((getValue() * 10^nDecimal) + 0.5) / (10^nDecimal);
+					
+					local sValue = "" .. nValue .. " " .. Interface.getString("ref_label_weightsuffix");
+					window.weightwithsuffix.setValue(sValue);
+				end
+			</script>
+		</hn>
+	</template>
+
+	<!-- DEPRECATED - 2023-05-30 (Short Release) -->
+	<template name="anchor_campaign">
+		<genericcontrol name="rightanchor">
+			<anchored to="list" height="0" width="0">
+				<top anchor="bottom" offset="10" />
+				<right />
+			</anchored>
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_campaign2">
+		<genericcontrol name="rightanchor">
+			<anchored to="list" height="0" width="0">
+				<top anchor="bottom" offset="20" />
+				<right />
+			</anchored>
+
+		</genericcontrol>
+	</template>
+	<template name="filter_campaign">
+		<filter name="filter">
+			<anchored to="rightanchor" height="20">
+				<top />
+				<left parent="list" offset="15" />
+				<right relation="relative" offset="-10" />
+			</anchored>
+
+		</filter>
+	</template>
+	<template name="filter_utility">
+		<filter_campaign>
+			<script>
+
+				function onValueChanged()
+					super.onValueChanged();
+					if window.onFilterChanged then
+						window.onFilterChanged();
+					else
+						window.list.applyFilter();
+					end
+				end
+			</script>
+		</filter_campaign>
+	</template>
+	<template name="anchor_title_utilitybox">
+		<genericcontrol>
+			<anchored height="0">
+				<top parent="title" anchor="bottom" offset="0" />
+				<left parent="" anchor="left" offset="30" />
+				<right parent="" anchor="right" offset="-30" />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_bottom_utilitybox">
+		<genericcontrol>
+			<anchored to="contentanchor" height="0">
+				<bottom parent="" offset="-20" />
+				<left />
+				<right />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_bottom_utilitybox_buttons">
+		<genericcontrol>
+			<anchored to="contentanchor" height="0">
+				<bottom parent="" offset="-45" />
+				<left />
+				<right />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<!-- USED - CPR/PF2 -->
+	<template name="anchor_title_utilitybox3">
+		<genericcontrol>
+			<anchored height="0">
+				<top parent="title" anchor="bottom" offset="0" />
+				<left parent="" anchor="left" offset="30" />
+				<right parent="" anchor="right" offset="-30" />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<!-- USED - CPR -->
+	<template name="anchor_bottom_utilitybox3">
+		<genericcontrol>
+			<anchored to="contentanchor" height="0">
+				<bottom parent="" offset="-55" />
+				<left />
+				<right />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_title_tokenbag">
+		<genericcontrol>
+			<anchored height="0">
+				<top parent="title" anchor="bottom" offset="0" />
+				<left parent="" anchor="left" offset="30" />
+				<right parent="" anchor="right" offset="-35" />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_bottom_tokenbag">
+		<genericcontrol>
+			<anchored to="contentanchor" height="0">
+				<bottom parent="" offset="-30" />
+				<left />
+				<right />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="anchor_bottom_tokenbag_buttons">
+		<genericcontrol>
+			<anchored to="contentanchor" height="0">
+				<bottom parent="" offset="-65" />
+				<left />
+				<right />
+			</anchored>
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="close_utilitybox2">
+		<close>
+			<anchored>
+				<top offset="8" />
+				<right offset="-10" />
+			</anchored>
+
+		</close>
+	</template>
+	<template name="help_utilitybox2">
+		<help>
+			<anchored>
+				<top offset="8" />
+				<right offset="-34" />
+			</anchored>
+
+		</help>
+	</template>
+	<template name="resize_utilitybox2">
+		<resize>
+			<anchored>
+				<right offset="-7" />
+				<bottom offset="-8" />
+			</anchored>
+
+		</resize>
+	</template>
+	<!-- USED - CPR/PF2 -->
+	<template name="close_utilitybox3">
+		<close>
+			<anchored>
+				<top offset="0" />
+				<right offset="-6" />
+			</anchored>
+
+		</close>
+	</template>
+	<template name="help_utilitybox3">
+		<help>
+			<anchored>
+				<top offset="0" />
+				<right offset="-30" />
+			</anchored>
+
+		</help>
+	</template>
+	<template name="resize_utilitybox3">
+		<resize>
+			<anchored>
+				<right offset="-6" />
+				<bottom offset="-2" />
+			</anchored>
+
+		</resize>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="helper_effects">
+		<help_utilitybox>
+			<urlres>help_tool_effects</urlres>
+
+		</help_utilitybox>
+	</template>
+	<template name="helper_tokenbag">
+		<help_tokenbag>
+			<urlres>help_tool_tokens</urlres>
+
+		</help_tokenbag>
+	</template>
+	<template name="spacer_listitem">
+		<spacer_listitem_right>
+
+		</spacer_listitem_right>
+	</template>
+	<template name="link_listitem">
+		<link_listitem_right>
+
+		</link_listitem_right>
+	</template>
+	<template name="linkc_listitem">
+		<linkc_listitem_right>
+
+		</linkc_listitem_right>
+	</template>
+	<template name="button_text_large">
+		<button_text>
+
+		</button_text>
+	</template>
+
+	<!-- DEPRECATED - 2023-06-27 (Short Release) -->
+	<template name="close_referencepage">
+		<close>
+			<anchored>
+				<top offset="0" />
+				<right offset="-8" />
+			</anchored>
+
+		</close>
+	</template>
+	<template name="resize_referencepage">
+		<resize>
+			<anchored>
+				<right offset="-10" />
+				<bottom offset="-10" />
+			</anchored>
+
+		</resize>
+	</template>
+	<template name="sub_ref_header">
+		<subwindow>
+			<anchored>
+				<top offset="23" />
+				<left offset="13" />
+				<right offset="-13" />
+			</anchored>
+			<activate />
+
+		</subwindow>
+	</template>
+	<template name="frame_ref_content">
+		<genericcontrol name="contentframe">
+			<anchored>
+				<top parent="header" anchor="bottom" offset="15" />
+				<left offset="35" />
+				<right offset="-40" />
+				<bottom offset="-35" />
+			</anchored>
+			<frame name="groupbox" offset="15,15,20,15" />
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<template name="sub_refmanualpage_content">
+		<subwindow>
+			<anchored to="contentframe" position="over" />
+			<fastinit />
+			<activate />
+
+		</subwindow>
+	</template>
+	<template name="sub_ref_content">
+		<subwindow>
+			<anchored to="contentframe" position="over" />
+			<activate />
+
+		</subwindow>
+	</template>
+	<template name="scrollbar_ref_content">
+		<scrollbar>
+			<anchored to="content" position="right" offset="-5,-5" />
+			<target>content</target>
+
+		</scrollbar>
+	</template>
+	<template name="helper_masterindex">
+		<help_referencelist>
+			<urlres>help_library_masterindex</urlres>
+
+		</help_referencelist>
+	</template>
+
+	<!-- DEPRECATED - 2022-08-16 (Very Long Release) -->
+	<!-- USED - PF2 -->
+	<template name="anchor_ctentry_right">
+		<genericcontrol name="rightanchor">
+			<anchored width="0" height="0">
+				<top parent="active_spacer_top" anchor="bottom" offset="10" />
+				<right />
+			</anchored>
+			<invisible />
+
+		</genericcontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_idelete">
+		<button_idelete name="idelete">
+			<anchored to="rightanchor">
+				<top />
+				<right anchor="left" relation="relative" offset="-12" />
+			</anchored>
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</button_idelete>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="link_ctentry">
+		<linkfield>
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" offset="-8" />
+			</anchored>
+			<class>npc</class>
+			<selfonempty />
+			<readonly />
+			<script>
+
+				function onValueChanged()
+					window.onLinkChanged();
+				end
+			</script>
+		</linkfield>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="string_ctname">
+		<string_ct>
+			<anchored height="20">
+				<top parent="active_spacer_top" anchor="bottom"  relation="relative" offset="10" />
+				<left parent="token" anchor="right" offset="5" />
+				<right parent="rightanchor" anchor="left" relation="relative" offset="-10" />
+			</anchored>
+			<tabtarget next="initresult" />
+			<script file="ct/scripts/ct_name.lua" />
+		</string_ct>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="string_ctname_nonid">
+		<string_ctname>
+			<empty textres="library_recordtype_empty_nonid_npc" />
+			<invisible />
+			<script>
+				function onInit()
+					super.onInit();
+				end
+			</script>
+		</string_ctname>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_tokenvis">
+		<buttonfield>
+			<anchored to="token" position="belowright" offset="-10,-7" width="20" height="20" />
+			<state icon="visibilityoff" tooltipres="ct_tooltip_shownpcon" />
+			<state icon="visibilityon" tooltipres="ct_tooltip_shownpcoff" />
+			<invisible/>
+			<script>
+
+				function onValueChanged()
+					window.onVisibilityChanged();
+				end
+			</script>
+		</buttonfield>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_isidentified">
+		<buttonfield>
+			<anchored to="token" position="righthigh" offset="-6,0" width="12" height="12" />
+			<state icon="record_unidentified" tooltipres="tooltip_nonid" />
+			<state icon="record_identified" tooltipres="tooltip_id" />
+			<invisible />
+			<gmeditonly />
+			<script>
+
+				function onValueChanged()
+					if window.onIDChanged then
+						window.onIDChanged();
+					end
+				end
+			</script>
+		</buttonfield>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="frame_ctsub">
+		<genericcontrol>
+			<anchored>
+				<left offset="75" />
+				<top offset="-8" />
+				<right offset="-4" />
+				<bottom offset="8" />
+			</anchored>
+			<frame name="ct_subgroupbox" />
+			<disabled />
+
+		</genericcontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="icon_ctsection">
+		<genericcontrol>
+			<anchored width="20" height="20">
+				<left offset="55" />
+				<top parent="active_spacer_top" anchor="bottom" relation="current" offset="10" />
+			</anchored>
+
+		</genericcontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_activateeffects">
+		<buttoncontrol name="activateeffects">
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" offset="-5" />
+			</anchored>
+			<state icon="button_effect" tooltipres="ct_tooltip_effects" />
+			<state icon="button_effect_down" />
+			<script>
+
+				function onValueChanged()
+					window.setEffectsVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_activatespacing">
+		<buttoncontrol name="activatespacing">
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" />
+			</anchored>
+			<state icon="button_space" tooltipres="ct_tooltip_space" />
+			<state icon="button_space_down" />
+			<script>
+
+				function onValueChanged()
+					window.setSpacingVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_activatedefensive">
+		<buttoncontrol name="activatedefensive">
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" />
+			</anchored>
+			<tooltip textres="ct_tooltip_defense" />
+			<state icon="button_shield" />
+			<state icon="button_shield_down" />
+			<script>
+
+				function onValueChanged()
+					window.setDefensiveVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_activateactive">
+		<buttoncontrol name="activateactive">
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" />
+			</anchored>
+			<tooltip textres="ct_tooltip_offense" />
+			<state icon="button_sword" />
+			<state icon="button_sword_down" />
+			<script>
+
+				function onValueChanged()
+					window.setActiveVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctentry_activatetargeting">
+		<buttoncontrol name="activatetargeting">
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right anchor="left" relation="relative" />
+			</anchored>
+			<state icon="button_section_targeting" tooltipres="ct_tooltip_targeting" />
+			<state icon="button_section_targeting_down" />
+			<script>
+
+				function onValueChanged()
+					window.setTargetingVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="frame_ctsection_targeting">
+		<frame_ctsub name="frame_targeting">
+			<anchored>
+				<top parent="targetingicon" />
+				<bottom parent="sub_targeting" />
+			</anchored>
+
+		</frame_ctsub>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="icon_ctsection_targeting">
+		<icon_ctsection name="targetingicon">
+			<icon>button_section_targeting_down</icon>
+
+		</icon_ctsection>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="sub_ctsection_targeting">
+		<subwindow name="sub_targeting">
+			<anchored>
+				<top parent="active_spacer_top" anchor="bottom" relation="relative" offset="10" />
+				<left parent="targetingicon" anchor="right" offset="8" />
+				<right offset="-12" />
+			</anchored>
+			<class>ct_targets</class>
+
+		</subwindow>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="frame_ctsection_spacing">
+		<frame_ctsub name="frame_spacing">
+			<anchored>
+				<top parent="spacingicon" />
+				<bottom parent="space" />
+			</anchored>
+
+		</frame_ctsub>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="icon_ctsection_spacing">
+		<icon_ctsection name="spacingicon">
+			<icon>button_space_down</icon>
+
+		</icon_ctsection>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="label_ctentry_space">
+		<label name="spacelabel">
+			<anchored to="space" position="lefthigh" offset="10,0"/>
+			<static textres="ct_label_space_size" />
+
+		</label>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="label_ctentry_reach">
+		<label name="reachlabel">
+			<anchored to="reach" position="lefthigh" offset="10,0"/>
+			<static textres="ct_label_space_reach" />
+
+		</label>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="number_ctentry_space">
+		<number_ct name="space">
+			<anchored width="25" height="20">
+				<top parent="active_spacer_top" anchor="bottom" relation="relative" offset="10" />
+				<left parent="spacingicon" anchor="right" offset="47" />
+			</anchored>
+			<description textres="ct_tooltip_space_size" />
+			<hideonvalue value="0" />
+			<default>1</default>
+
+		</number_ct>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="number_ctentry_reach">
+		<number_ct name="reach">
+			<anchored to="space" position="righthigh" offset="60,0" />
+			<description textres="ct_tooltip_space_reach" />
+			<hideonvalue value="0" />
+			<default>1</default>
+
+		</number_ct>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="frame_ctsection_effect">
+		<frame_ctsub name="frame_effects">
+			<anchored>
+				<top parent="effecticon" />
+				<bottom parent="effects_iadd" />
+			</anchored>
+
+		</frame_ctsub>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="button_ctsection_effect_iadd">
+		<button_iadd name="effects_iadd">
+			<anchored>
+				<top parent="active_spacer_top" anchor="bottom" relation="relative" offset="2" />
+				<right parent="effects" offset="-2" />
+			</anchored>
+			<target>effects</target>
+			<tooltip textres="ct_tooltip_effectadd" />
+
+		</button_iadd>
+	</template>
+	<template name="spacer_clientctsection_effect">
+		<genericcontrol>
+			<anchored to="effecticon" position="below" height="6" />
+			<disabled />
+			<invisible />
+
+		</genericcontrol>
+	</template>
+	<!-- USED - PF2 -->
+	<template name="icon_ctsection_effect">
+		<icon_ctsection name="effecticon">
+			<icon>button_effect_down</icon>
+
+		</icon_ctsection>
+	</template>
+	<template name="icon_clientctsection_effect">
+		<genericcontrol>
+			<anchored width="20" height="20">
+				<left offset="55" />
+				<top parent="active_spacer_top" anchor="bottom" relation="current" offset="5" />
+			</anchored>
+			<icon>button_effect_down</icon>
+			<invisible />
+
+		</genericcontrol>
+	</template>
+	<template name="list_ctsection_effect">
+		<windowlist name="effects">
+			<anchored>
+				<top parent="active_spacer_top" anchor="bottom" relation="relative" offset="10" />
+				<left parent="effecticon" anchor="right" offset="8" />
+				<right offset="-12" />
+			</anchored>
+			<datasource>.effects</datasource>
+			<class>ct_effect</class>
+			<noscroll />
+			<!-- Script used in other templates too -->
+			<script file="ct/scripts/ct_effectlist.lua" />
+		</windowlist>
+	</template>
+	<template name="string_ctentry_effects">
+		<string_ct_summary>
+			<!-- Script used in other templates too -->
+			<script file="ct/scripts/ct_effect_summary.lua" />
+		</string_ct_summary>
+	</template>
+
+	<!-- USED - SDL/SW -->
+	<windowclass name="ct_targets">
+		<margins control="0,0,0,2" />
+
+		<sheetdata>
+			<windowlist name="targets">
+				<anchored>
+					<top />
+					<left />
+					<right offset="-50" />
+				</anchored>
+				<datasource>.targets</datasource>
+				<class>ct_target</class>
+				<noscroll />
+				<columns>
+					<width>26</width>
+					<fillwidth />
+				</columns>
+			</windowlist>
+
+			<buttoncontrol name="targeting_add_button">
+				<bounds>-45,2,20,20</bounds>
+				<icon normal="button_targeting" pressed="button_targeting_down" />
+				<tooltip textres="ct_tooltip_dragtarget" />
+				<script>
+					function onInit()
+						registerMenuItem(Interface.getString("ct_menu_targeting"), "goto", 4);
+						registerMenuItem(Interface.getString("ct_menu_targetingfriend"), "turn", 4, 3);
+						registerMenuItem(Interface.getString("ct_menu_targetingnonfriend"), "mask", 4, 5);
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						local nodeWin = window.getDatabaseNode();
+						if not nodeWin then
+							return false;
+						end
+						draginfo.setType("targeting");
+						draginfo.setIcon("drag_targeting");
+						draginfo.setShortcutData(window.getClass(), DB.getPath(nodeWin));
+						return true;
+					end
+
+					function onMenuSelection(selection, subselection)
+						if selection == 4 then
+							if subselection == 3 then
+								TargetingManager.setCTFactionTargets(window.getDatabaseNode());
+							elseif subselection == 5 then
+								TargetingManager.setCTFactionTargets(window.getDatabaseNode(), true);
+							end
+						end
+					end
+				</script>
+			</buttoncontrol>
+
+			<buttoncontrol name="targeting_clear_button">
+				<bounds>-20,2,20,20</bounds>
+				<icon normal="button_clear" pressed="button_clear_down" />
+				<tooltip textres="ct_tooltip_cleartarget" />
+				<script>
+					function onButtonPress()
+						TargetingManager.clearCTTargets(window.getDatabaseNode());
+					end
+				</script>
+			</buttoncontrol>
+		</sheetdata>
+	</windowclass>
+</root>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+
+	<template name="sub_ref_content">
+		<subwindow>
+			<anchored to="contentframe" position="over">
+				<left offset="0" />
+				<right offset="10" />
+			</anchored>
+			<activate />
+		</subwindow>
+	</template>
+
+	<template name="label_column">
+		<label>
+			<anchored>
+				<top parent="columnanchor" anchor="bottom" relation="current" offset="7" />
+				<left offset="0" />
+				<right offset="0" />
+			</anchored>
+		</label>
+	</template>
+	<template name="ft_column_labeled_world">
+		<basicft>
+			<frame mergerule="replace" name="fieldlight" offset="4,2,4,2" />
+			<anchored>
+				<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+				<left offset="97" />
+				<right offset="-18" />
+			</anchored>
+		</basicft>
+	</template>	
+
+	<template name="button_chat_icon">
+		<buttoncontrol>
+			<anchored width="16" />
+			<icon normal="button_chat" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+	<template name="button_pcedit_icon">
+		<buttoncontrol>
+			<anchored width="16" />
+			<icon normal="button_pcedit" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+	<template name="button_pcsubmit_icon">
+		<buttoncontrol>
+			<anchored width="90" height="30" />
+			<icon normal="button_pcsubmit" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+	<template name="ft_column_wb">
+		<simpleft>
+			<frame mergerule="replace" name="fielddark" offset="7,5,7,5" />
+			<stateframe>
+				<keyedit name="fieldfocus" offset="7,5,7,5" />
+				<hover name="fieldfocus" offset="7,5,7,5" />
+				<drophilight name="fieldfocus" offset="7,5,7,5" />
+			</stateframe>
+			<anchored>
+				<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+				<left offset="5" />
+				<right offset="-5" />
+			</anchored>
+		</simpleft>
+	</template>
+
+	<template name="label_wbreftype">
+		<stringcontrol>
+			<anchored to="name" position="belowleft" offset="0,2">
+				<right parent="" offset="-25" />
+			</anchored>
+			<font>windowtitle</font>
+			<readonly />
+		</stringcontrol>
+	</template>	
+
+	<template name="button_checkbox_heading_right">
+		<button_checkbox>
+			<anchored width="20" />
+		</button_checkbox>
+	</template>
+
+</root>

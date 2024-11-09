@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="mc_world">
+		<frame>worldpage</frame>
+		<placement>
+			<size width="450" height="550" />
+		</placement>
+		<sizelimits>
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<playercontrol />
+		<script>
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				if content.subwindow then
+					content.subwindow.update();
+				end
+			end
+		</script>
+		<sheetdata>
+			<sub_ref_header name="header">
+				<class>ref_world_header</class>
+			</sub_ref_header>
+
+			<frame_ref_content />
+			<sub_ref_content name="content">
+				<class>ref_world_stats</class>
+			</sub_ref_content>
+			<scrollbar_ref_content>
+				<anchored to="content" position="right" offset="-5,-5" />
+				<target>content</target>
+			</scrollbar_ref_content>
+
+			<resize_referencepage />
+			<close_referencepage />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="ref_world_header">
+		<margins control="0,0,0,8" />
+		<!--script file="campaign/scripts/world_header.lua" /-->
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				name.setReadOnly(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<link_record_header_id name="link">
+				<class>mc_world</class>
+			</link_record_header_id>
+			
+			<anchor_record_header_right name="rightanchor" />
+
+			<icon_record_locked />
+			<button_record_locked>
+				<anchored to="rightanchor">
+					<top offset="0" />
+					<right anchor="left" relation="relative" offset="-20" />
+				</anchored>
+			</button_record_locked>
+
+			<string_record_name_id name="name">
+				<empty text="&lt;&lt;New Entry&gt;&gt;" />
+			</string_record_name_id>
+			<string_record_name_id name="nonid_name">
+				<empty text="library_recordtype_empty_nonid_npc" />
+				<invisible />
+			</string_record_name_id>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="ref_world_stats">
+		<margins control="0,0,10,7" />
+		<script file="campaign/scripts/world_main.lua" />
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+
+			<button_cycler_worldtype name="worldtype" source="worldtype">
+				<anchored width="160" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="95" />
+				</anchored>
+				<script>
+					function onClickRelease()
+						super.onClickRelease();
+						window.update();
+					end
+				</script>
+				<gmeditonly />
+			</button_cycler_worldtype>
+
+			<label_column name="inplace_label">
+				<static textres="ref_label_inplace" />
+			</label_column>
+			<ft_column_labeled_world name="inplace">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="inplace_enabled" >
+				<anchored to="inplace_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="hq_label">
+				<static textres="ref_label_hq" />
+			</label_column>
+			<ft_column_labeled_world name="hq">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="hq_enabled" >
+				<anchored to="hq_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="status_label">
+				<static textres="ref_label_status" />
+			</label_column>
+			<ft_column_labeled_world name="status">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="status_enabled" >
+				<anchored to="status_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="gender_label">
+				<static textres="ref_label_gender" />
+			</label_column>
+			<ft_column_labeled_world name="gender">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="gender_enabled" >
+				<anchored to="gender_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="race_label">
+				<static textres="ref_label_race" />
+			</label_column>
+			<ft_column_labeled_world name="race">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="race_enabled" >
+				<anchored to="race_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="occupation_label">
+				<static textres="ref_label_occupation" />
+			</label_column>
+			<ft_column_labeled_world name="occupation">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="occupation_enabled" >
+				<anchored to="occupation_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="faction_label">
+				<static textres="ref_label_faction" />
+			</label_column>
+			<ft_column_labeled_world name="faction">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="faction_enabled" >
+				<anchored to="faction_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="relationships_label">
+				<static textres="ref_label_relationships" />
+			</label_column>
+			<ft_column_labeled_world name="relationships">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="relationships_enabled" >
+				<anchored to="relationships_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="description_label">
+				<static textres="ref_label_briefdesc" />
+			</label_column>
+			<button_chat_icon name="button_chat_place" >
+				<anchored to="description_label" position="left" offset="-85" />
+				<script>
+					function action(draginfo)
+						local nodeWin = window.getDatabaseNode();
+
+						local sMessage1 = "## Description\n\n" .. DB.getText(nodeWin, "description", 0);
+						local sMessage2 = "\n--- --- --- ---\n## Discussion\n\n" .. DB.getText(nodeWin, "pcdescription", 0);
+						local sName1 = DB.getText(nodeWin, "name", 0);
+						local sMessage = sName1 .. "\n\n" .. sMessage1 .. sMessage2;
+						
+						if string.len(sMessage) &lt; 50 then sMessage = sMessage .. "\n \n\n\n";
+							elseif string.len(sMessage) &lt; 100 then sMessage = sMessage .. "\n \n\n";
+							elseif string.len(sMessage) &lt; 150 then sMessage = sMessage .. "\n \n";
+							else sMessage = sMessage .. "\n ";
+						end
+
+						local sWorldType = DB.getText(nodeWin, "worldtype", "other");
+
+
+						if sWorldType == "Place" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Place: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Group" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Group: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Religion" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Religion: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Entity" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Entity: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Other" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Misc: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						else	
+							msg = {font = "narratorfont", icon = "gmid", mode = "damned"};
+							msg.text = sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						end
+						
+						return true;
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onClickRelease(x, y)
+						return action();
+					end
+				</script>
+			</button_chat_icon>
+			<ft_column_labeled_world name="description">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="description_enabled" >
+				<anchored to="description_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+			
+			<label_column name="gmdescription_label">
+				<static textres="ref_label_briefgmdesc" />
+				<gmvisibleonly />
+			</label_column>
+			<ft_column_labeled_world name="gmdescription">
+				<script file="common/scripts/column_string.lua" />
+				<gmvisibleonly />
+			</ft_column_labeled_world>
+
+			<label_column name="pcdescription_label">
+				<static textres="ref_label_briefpcdesc" />
+			</label_column>
+			<button_chat_icon name="button_chat_pcdesc" >
+				<anchored to="pcdescription_label" position="left" offset="-85" />
+				<script>
+					function action(draginfo)
+						local nodeWin = window.getDatabaseNode();
+
+						local sMessage1 = "## Description\n\n" .. DB.getText(nodeWin, "description", 0);
+						local sMessage2 = "\n--- --- --- ---\n## Discussion\n\n" .. DB.getText(nodeWin, "pcdescription", 0);
+						local sName1 = DB.getText(nodeWin, "name", 0);
+						local sMessage = sName1 .. "\n\n" .. sMessage1 .. sMessage2;
+						
+						if string.len(sMessage) &lt; 50 then sMessage = sMessage .. "\n \n\n\n";
+							elseif string.len(sMessage) &lt; 100 then sMessage = sMessage .. "\n \n\n";
+							elseif string.len(sMessage) &lt; 150 then sMessage = sMessage .. "\n \n";
+							else sMessage = sMessage .. "\n ";
+						end
+
+						local sWorldType = DB.getText(nodeWin, "worldtype", "other");
+
+
+						if sWorldType == "Place" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Place: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Group" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Group: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Religion" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Religion: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Entity" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Entity: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						elseif sWorldType == "Other" then 
+							msg = {font = "narratorfont", mode = "damned"};
+							msg.text = "Misc: " .. sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						else	
+							msg = {font = "narratorfont", icon = "gmid", mode = "damned"};
+							msg.text = sMessage .. "\n ";
+							Comm.deliverChatMessage(msg);
+						end
+						
+						return true;
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onClickRelease(x, y)
+						return action();
+					end
+				</script>
+				<gmvisibleonly />
+			</button_chat_icon>
+			<button_pcedit_icon name="button_edit_pcdesc" >
+				<anchored to="pcdescription_label" position="left" offset="-70" />
+				<script>
+					function onInit()
+						if User.getCurrentIdentity() ~= nil then return true; end
+						if User.isHost then setVisible(false); end
+					end
+					function onClickDown()
+						local sNode = window.getDatabaseNode();
+						local sNodePath = DB.getPath(window.getDatabaseNode());
+						local nodeChar = getDatabaseNode();
+						local sPCName = DB.getValue("charsheet." .. User.getCurrentIdentity() .. ".name");
+						local sPlayerPath = "pc." .. sPCName;
+						local sPlayerID = User.getCurrentIdentity();
+						local sPlayerName = User.getUsername();
+						PCEditManager.notifyCreateNode(sNodePath, sPCName, sPlayerPath, sPlayerID, sPlayerName, sNode);
+					end
+
+					function onButtonPress()
+						Interface.openWindow("world_pcedit", window.getDatabaseNode());
+					end
+				</script>
+			</button_pcedit_icon>
+			<ft_column_labeled_world name="pcdescription">
+				<text>&lt;p&gt;PC Notes&lt;/p&gt;</text>
+				<textres>ref_label_briefpcdesc</textres>
+				<script file="campaign/scripts/column_string.lua" />
+			</ft_column_labeled_world>
+
+			<line_column name="divider1">
+				<gmvisibleonly />
+			</line_column>
+
+			<label_column name="placetype_label">
+				<static textres="ref_label_placetype" />
+			</label_column>
+			<ft_column_labeled_world name="placetype">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="placetype_enabled" >
+				<anchored to="placetype_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+			
+			<label_column name="demographics_label">
+				<static textres="ref_label_demographics" />
+			</label_column>
+			<ft_column_labeled_world name="demographics">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="demographics_enabled" >
+				<anchored to="demographics_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="languages_label">
+				<static textres="ref_label_languages" />
+			</label_column>
+			<ft_column_labeled_world name="languages">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="languages_enabled" >
+				<anchored to="languages_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="economy_label">
+				<static textres="ref_label_economy" />
+			</label_column>
+			<ft_column_labeled_world name="economy">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="economy_enabled" >
+				<anchored to="economy_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="government_label">
+				<static textres="ref_label_government" />
+			</label_column>
+			<ft_column_labeled_world name="government">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="government_enabled" >
+				<anchored to="government_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="history_label">
+				<static textres="ref_label_history" />
+			</label_column>
+			<ft_column_labeled_world name="history">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="history_enabled" >
+				<anchored to="history_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="religion_label">
+				<static textres="ref_label_religion" />
+			</label_column>
+			<ft_column_labeled_world name="religion">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="religion_enabled" >
+				<anchored to="religion_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="grouptype_label">
+				<static textres="ref_label_grouptype" />
+			</label_column>
+			<ft_column_labeled_world name="grouptype">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="grouptype_enabled" >
+				<anchored to="grouptype_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="purpose_label">
+				<static textres="ref_label_purpose" />
+			</label_column>
+			<ft_column_labeled_world name="purpose">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="purpose_enabled" >
+				<anchored to="purpose_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="alignment_label">
+				<static textres="ref_label_alignment" />
+			</label_column>
+			<ft_column_labeled_world name="alignment">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="alignment_enabled" >
+				<anchored to="alignment_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="goals_label">
+				<static textres="ref_label_goals" />
+			</label_column>
+			<ft_column_labeled_world name="goals">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="goals_enabled" >
+				<anchored to="goals_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="obligations_label">
+				<static textres="ref_label_obligations" />
+			</label_column>
+			<ft_column_labeled_world name="obligations">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="obligations_enabled" >
+				<anchored to="obligations_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="deity_label">
+				<static textres="ref_label_deity" />
+			</label_column>
+			<ft_column_labeled_world name="deity">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="deity_enabled" >
+				<anchored to="deity_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="adherents_label">
+				<static textres="ref_label_adherents" />
+			</label_column>
+			<ft_column_labeled_world name="adherents">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="adherents_enabled" >
+				<anchored to="adherents_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="funding_label">
+				<static textres="ref_label_funding" />
+			</label_column>
+			<ft_column_labeled_world name="funding">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="funding_enabled" >
+				<anchored to="funding_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<line_column name="divider2">
+				<gmvisibleonly />
+			</line_column>
+
+			<label_column name="leader_label">
+				<static textres="ref_label_leader" />
+			</label_column>
+			<ft_column_labeled_world name="leader">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="leader_enabled" >
+				<anchored to="leader_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="npcs_label">
+				<static textres="ref_label_npcs" />
+			</label_column>
+			<ft_column_labeled_world name="npcs">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="npcs_enabled" >
+				<anchored to="npcs_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<line_column name="divider3">
+				<gmvisibleonly />
+			</line_column>
+
+			<label_column name="images_label">
+				<static textres="ref_label_images" />
+			</label_column>
+			<ft_column_labeled_world name="images">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="images_enabled" >
+				<anchored to="images_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+			<label_column name="places_label">
+				<static textres="ref_label_places" />
+			</label_column>
+			<ft_column_labeled_world name="places">
+				<script file="common/scripts/column_string.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_world>
+			<button_checkbox_heading_right name="places_enabled" >
+				<anchored to="places_label" position="right" offset="-12" />
+			</button_checkbox_heading_right>
+
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="world_pcedit">
+		<frame>worldpage</frame>
+		<placement>
+			<size width="400" height="500" />
+		</placement>
+		<sizelimits>
+			<minimum width="400" height="300" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<playercontrol />
+		<sharable />
+		<sheetdata>
+
+			<anchor_column name="columnanchor" />
+			
+			<formattedtextcontrol name="pcnewdesc">
+				<script>
+					function onInit()
+						setReadOnly(false);
+					end
+				</script>
+				<frame mergerule="replace" name="fieldlight" offset="27,25,27,25" />
+				<anchored>
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="80" />
+					<left offset="50" />
+					<right offset="-50" />
+				</anchored>
+			</formattedtextcontrol>
+			
+			<scrollbar>
+				<target>pcnewdesc</target>
+			</scrollbar>
+			
+			<button_pcsubmit_icon name="button_pcsubmit_pcnotes" >
+				<anchored position="insidetopleft" offset="10,10" />
+				<script>
+					function onClickRelease()
+
+						local nodeWin = window.getDatabaseNode();
+						local sPCNewdesc = window.pcnewdesc.getValue();
+						local sPCName = DB.getValue("charsheet." .. User.getCurrentIdentity() .. ".name");
+						local sWorldPath = window.getDatabaseNode().getPath();
+						window.close();
+
+						PCEditManager.notifyUpdateNode(sWorldPath, sPCNewdesc, sPCName);
+
+					end
+				</script>
+			</button_pcsubmit_icon>
+			
+			<resize_recordsheet />
+			<close_recordsheet />
+		</sheetdata>
+	</windowclass>
+
+	<template name="button_cycler_worldtype">
+		<button_stringcycler>
+			<anchored height="20" />
+			<parameters>
+				<defaultlabel mergerule="replace">Set Type</defaultlabel>
+				<initialvalue>Place</initialvalue>
+				<default>Place</default>
+				<labels>Place|Group|Entity|Religion|Other</labels>
+				<values>Place|Group|Entity|Religion|Other</values>
+
+			</parameters>
+		</button_stringcycler>
+	</template>
+</root>

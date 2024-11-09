@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<!-- SoT Dice -->
+	<icon name="ds6_skull" file="graphics/dice/ds6_skull.png" />
+	<icon name="ds6_anchor" file="graphics/dice/ds6_anchor.png" />
+	<icon name="ds6_chest" file="graphics/dice/ds6_chest.png" />
+	<icon name="ds6_bones" file="graphics/dice/ds6_bones.png" />
+ 
+
+	
+</root>

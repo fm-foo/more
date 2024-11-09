@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+
+	<template name="button_chat_icon">
+		<buttoncontrol>
+			<anchored width="16" />
+			<icon normal="button_chat" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+	<template name="button_pcedit_icon">
+		<buttoncontrol>
+			<anchored width="16" />
+			<icon normal="button_pcedit" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+	<template name="button_pcsubmit_icon">
+		<buttoncontrol>
+			<anchored width="90" height="30" />
+			<icon normal="button_pcsubmit" pressed="down" />
+		</buttoncontrol>
+	</template>
+
+
+</root>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+	Please see the license.html file included with this distribution for 
+	attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="pcrace">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="400" height="450" />
+		</placement>
+		<sizelimits>
+			<minimum width="300" height="300" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<playercontrol />
+		<sharable />
+		<script>
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				if stats.subwindow then
+					stats.subwindow.update();
+				end
+				
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+			end
+		</script>
+		<sheetdata>
+			<sub_ref_header name="header">
+				<class>ref_pcrace_header</class>
+			</sub_ref_header>
+
+			<frame_ref_content />
+			<sub_ref_content name="content">
+				<class>ref_pcrace_stats</class>
+			</sub_ref_content>
+			<scrollbar_ref_content offset="-20" />
+
+			<subwindow_record name="stats">
+				<class>ref_pcclass_stats</class>
+			</subwindow_record>
+
+			<resize_referencepage />
+			<close_referencepage />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="ref_pcrace_header">
+		<margins control="0,0,0,10" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local nodeRecord = getDatabaseNode();
+
+				local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
+				name.setReadOnly(bReadOnly);
+
+			end
+		</script>
+		<sheetdata>
+			<link_record_header>
+			<!-- changed referencepcrace to pcrace -->
+				<class>pcrace</class>
+			</link_record_header>
+
+			<anchor_record_header_right />
+			<icon_record_locked />
+			<button_record_locked />
+
+			<string_record_name_id name="name">
+				<empty text="&lt;&lt;class&gt;&gt;" />
+			</string_record_name_id>
+			<label_reftype name="reftype">
+				<static textres="ref_type_pcrace" />
+			</label_reftype>	
+		</sheetdata>
+	</windowclass>
+	
+
+	<windowclass name="ref_pcrace_stats">
+		<margins control="0,0,0,7" />
+
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<label_column name="label_desc">
+				<static text="Description" />
+			</label_column>
+			<ft_column_bedit name="racedesc">
+				<separator>line_desc</separator>
+			</ft_column_bedit>
+
+			<line_column />
+
+			<label_column name="label_option1">
+				<static text="Option 1" />
+			</label_column>
+			<string_column name="pcraceoption1">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption1_enabled" >
+				<anchored to="pcraceoption1" position="left" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option2">
+				<static text="Option 2" />
+			</label_column>
+			<string_column name="pcraceoption2">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption2_enabled" >
+				<anchored to="pcraceoption2" position="left" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option3">
+				<static text="Option 3" />
+			</label_column>
+			<string_column name="pcraceoption3">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption3_enabled" >
+				<anchored to="pcraceoption3" position="left" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option4">
+				<static text="Option 4" />
+			</label_column>
+			<string_column name="pcraceoption4">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption4_enabled" >
+				<anchored to="pcraceoption4" position="left" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option5">
+				<static text="Option 5" />
+			</label_column>
+			<string_column name="pcraceoption5">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption5_enabled" >
+				<anchored to="pcraceoption5" position="left" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option6">
+				<static text="Option 6" />
+			</label_column>
+			<string_column name="pcraceoption6">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcraceoption6_enabled" >
+				<anchored to="pcraceoption6" position="left" offset="5" />
+			</button_checkbox_heading_right>			
+			
+		</sheetdata>
+	</windowclass>
+
+
+</root>

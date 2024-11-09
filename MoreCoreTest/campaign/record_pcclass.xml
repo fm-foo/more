@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+	Please see the license.html file included with this distribution for 
+	attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="pcclass">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="550" height="450" />
+		</placement>
+		<sizelimits>
+			<minimum width="300" height="300" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<playercontrol />
+		<sharable />
+		<script>
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				if stats.subwindow then
+					stats.subwindow.update();
+				end
+				
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+			end
+		</script>
+		<sheetdata>
+			<sub_record_header name="header">
+				<class>ref_pcclass_header</class>
+			</sub_record_header>
+
+			<frame_record_content_tabbed name="contentframe" />
+
+			<subwindow_record name="stats">
+				<class>ref_pcclass_stats</class>
+			</subwindow_record>
+
+			<subwindow_record name="details">
+				<class>ref_pcclass_details</class>
+			</subwindow_record>
+
+			<scrollbar_record>
+				<target>stats</target>
+			</scrollbar_record>
+
+			<scrollbar_record>
+				<target>details</target>
+			</scrollbar_record>
+			
+			<tabs_recordsheet>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>stats</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_abilities</icon>
+					<subwindow>details</subwindow>
+				</tab>
+			</tabs_recordsheet>
+			
+			<resize_recordsheet />
+			<close_recordsheet />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="ref_pcclass_header">
+		<margins control="0,0,0,10" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				name.setReadOnly(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<link_record_header>
+			<!-- changed referencepcclass to pcclass -->
+				<class>pcclass</class>
+			</link_record_header>
+
+			<anchor_record_header_right />
+			<icon_record_locked />
+			<button_record_locked />
+
+			<string_record_name_id name="name">
+				<empty text="&lt;&lt;class&gt;&gt;" />
+			</string_record_name_id>
+			<label_reftype name="reftype">
+				<static textres="ref_type_pcclass" />
+			</label_reftype>	
+		</sheetdata>
+	</windowclass>
+	
+
+	<windowclass name="ref_pcclass_stats">
+		<margins control="0,0,0,7" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				classdesc.update(bReadOnly);
+			--[[	hitdice.update(bReadOnly);
+				maxlevel.update(bReadOnly);
+				armor.update(bReadOnly);
+				weapons.update(bReadOnly); ]]
+
+			end
+		</script>
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<label_column name="label_desc">
+				<static text="Description" />
+			</label_column>
+			<ft_column_bedit name="classdesc">
+				<separator>line_desc</separator>
+			</ft_column_bedit>
+
+			<line_column />
+
+			
+			
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="ref_classadvacement_header">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				name.setReadOnly(true);
+			end
+		</script>
+		<sheetdata>
+			<link_record_header>
+			<class>reference_class_advacement</class>
+			</link_record_header>
+
+			<anchor_record_header_right />
+			<icon_record_locked />
+			<button_record_locked />
+
+			<string_record_name name="name">
+				<empty textres="library_recordtype_empty_classadvacement" />
+				<readonly />
+			</string_record_name>
+			<label_reftype name="reftype">
+				<static textres="ref_type_classadvacement" />
+			</label_reftype>
+		</sheetdata>
+	</windowclass>
+
+
+	<windowclass name="ref_pcclass_details">
+		<margins control="0,0,0,7" />
+
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+						<!-- advancement -->
+			<header_column name="advancement_header">
+				<static text="Class Features By Level"/>
+				<center />
+			</header_column>
+			<button_iedit name="advancement_iedit">
+				<anchored to="advancement_header" position="righthigh" offset="-20,0" />
+				<target>advancement</target>
+			</button_iedit>
+			<button_iadd name="advancement_iadd">
+				<anchored to="advancement_iedit" position="lefthigh" offset="5,0" />
+				<target>advancement</target>
+			</button_iadd>
+			<list_column name="advancement">
+				<datasource>.advancement</datasource>
+				<sortby><control>level</control></sortby>
+				<class>ref_class_advancement</class>
+			</list_column>
+
+			<scrollbar_rolls name="scroll_1">
+				<target>pcclass_list</target>
+			</scrollbar_rolls>
+			
+			
+
+			
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="ref_class_advancement">
+		<margins control="0,0,2,5" /> 
+				<script>
+						function advancementEditor()
+							if User.isHost() then
+								Interface.openWindow("reference_class_advancement", getDatabaseNode());
+							end
+						end
+			
+						function onInit()
+							local node = getDatabaseNode();
+							DB.addHandler(node.getPath() .. ".pcclasslevel", "onUpdate", updateEntryLabel);
+							DB.addHandler(node.getPath() .. ".expneeded", "onUpdate", updateEntryLabel);
+							updateEntryLabel();
+						end
+						function onClose()
+							local node = getDatabaseNode();
+							DB.removeHandler(node.getPath() .. ".pcclasslevel", "onUpdate", updateEntryLabel);
+							DB.removeHandler(node.getPath() .. ".expneeded", "onUpdate", updateEntryLabel);
+						end
+						function updateEntryLabel()
+							local node = getDatabaseNode();
+							local nLevel = DB.getValue(node,"pcclasslevel",0);
+							local nEXPNeeded = DB.getValue(node,"expneeded",0);
+							local sLabel ="Level: " .. nLevel .. ", Next: " .. nEXPNeeded;
+							advancement_entry_label.setValue(sLabel);
+							name.setValue(sLabel);
+						end	
+				</script>
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			<anchor_listitem_column_right name="rightanchor" />
+			<button_listitem_column_delete name="idelete" />
+			<hn name="level" />
+			<hs name="name" />
+			 <class_advancement_label name="advancement_entry_label">
+				<anchored height="13">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="9" />
+					<left offset="5" />
+				</anchored>
+			</class_advancement_label> 
+		</sheetdata>
+	</windowclass>
+
+		<!-- start advancement edit windows-->
+	<windowclass name="reference_class_advancement">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="350" height="480" />
+		</placement>
+		<sizelimits>
+			<minimum width="350" height="400" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_item</minimize>
+		<tooltip field="name" />
+		<sharable />
+		<nodelete />
+		<script>
+			function onInit()
+				onLockChanged();
+				DB.addHandler(DB.getPath(getDatabaseNode(), "locked"), "onUpdate", onLockChanged);
+			end
+			function onClose()
+				DB.removeHandler(DB.getPath(getDatabaseNode(), "locked"), "onUpdate", onLockChanged);
+			end
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				if content.subwindow then
+					content.subwindow.update();
+				end
+			end
+		</script>
+		<sheetdata>
+			<sub_record_header name="header">
+				<class>pcclass_header</class>
+			</sub_record_header>
+
+			<frame_record_content name="contentframe" />
+
+			<subwindow_record name="content">
+				<class>pcclass_stats</class>
+				<activate />
+			</subwindow_record>
+			<scrollbar_record>
+				<target>content</target>
+			</scrollbar_record>
+
+			<resize_recordsheet />
+			<close_recordsheet />
+			<helper_mc_rolls />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="pcclass_header">
+		<margins control="0,0,0,7" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				name.setReadOnly(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<link_record_header>
+				<class>pcclass</class>
+			</link_record_header>
+
+			<string_record_name name="name">
+				<anchored>
+					<top offset="5"/>
+					<left offset="37" />
+					<right offset="-60" parent="" />
+				</anchored>
+				<empty textres="cas_emptyname" />
+			</string_record_name>
+
+			<button_rolls_type name="rollstype">
+				<anchored>
+					<top offset="5"/>
+					<right offset="-20" parent="" />
+				</anchored>
+				<script>
+				</script>
+			</button_rolls_type>
+
+			<anchor_record_header_right name="rightanchor" />
+			<icon_record_locked />
+			<button_record_locked />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="pcclass_stats">
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				pcclasslevel.setReadOnly(bReadOnly);
+				expneeded.setReadOnly(bReadOnly);
+				pcclasshealth.setReadOnly(bReadOnly);
+				label_health.setReadOnly(bReadOnly);
+				pcclasshealth_enabled.setReadOnly(bReadOnly);
+
+				pcclassoption1.setReadOnly(bReadOnly);
+				pcclassoption2.setReadOnly(bReadOnly);
+				pcclassoption3.setReadOnly(bReadOnly);
+				pcclassoption4.setReadOnly(bReadOnly);
+				pcclassoption5.setReadOnly(bReadOnly);
+				pcclassoption6.setReadOnly(bReadOnly);
+
+
+			end
+		</script>
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+
+
+
+			<!-- ==== Parameter Configuration ==== -->
+			<label_column>
+				<static text="Level" />
+			</label_column>
+			<number_column name="pcclasslevel">
+				<default>1</default>
+			</number_column>
+
+			<label_column name="label_experience">
+				<static text="Experience" />
+			</label_column>
+			<number_column name="expneeded">
+				<default>1000</default>
+			</number_column>
+			<button_checkbox_heading_right name="expneeded_enabled" >
+				<anchored to="label_experience" position="right" offset="5" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_health">
+				<anchored width="70" />
+				<static text="Health" />
+			</label_column>
+			<string_column name="pcclasshealth">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclasshealth_enabled" >
+				<anchored to="label_health" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option1">
+				<anchored width="70" />
+				<static text="Option 1" />
+			</label_column>
+			<string_column name="pcclassoption1">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption1_enabled" >
+				<anchored to="label_option1" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option2">
+				<anchored width="70" />
+				<static text="Option 2" />
+			</label_column>
+			<string_column name="pcclassoption2">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption2_enabled" >
+				<anchored to="label_option2" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option3">
+				<anchored width="70" />
+				<static text="Option 3" />
+			</label_column>
+			<string_column name="pcclassoption3">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption3_enabled" >
+				<anchored to="label_option3" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option4">
+				<anchored width="70" />
+				<static text="Option 4" />
+			</label_column>
+			<string_column name="pcclassoption4">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption4_enabled" >
+				<anchored to="label_option4" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option5">
+				<anchored width="70" />
+				<static text="Option 5" />
+			</label_column>
+			<string_column name="pcclassoption5">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption5_enabled" >
+				<anchored to="label_option5" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<label_column name="label_option6">
+				<anchored width="70" />
+				<static text="Option 6" />
+			</label_column>
+			<string_column name="pcclassoption6">
+				<default></default>
+			</string_column>
+			<button_checkbox_heading_right name="pcclassoption6_enabled" >
+				<anchored to="label_option6" position="right" offset="-20" />
+			</button_checkbox_heading_right>
+
+			<line_column />
+
+		</sheetdata>
+	</windowclass>
+
+
+</root>

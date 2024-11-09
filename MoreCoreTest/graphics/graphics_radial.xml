@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<!-- MoreCore Radial -->
+		<icon name="icond2" file="graphics/radial/icon_d2.png" />
+		<icon name="icond3" file="graphics/radial/icon_d3.png" />
+		<icon name="icond5" file="graphics/radial/icon_d5.png" />
+		<icon name="icond7" file="graphics/radial/icon_d7.png" />
+		<icon name="icond14" file="graphics/radial/icon_d14.png" />
+		<icon name="icond16" file="graphics/radial/icon_d16.png" />
+		<icon name="icond24" file="graphics/radial/icon_d24.png" />
+		<icon name="icond30" file="graphics/radial/icon_d30.png" />
+
+
+	<!-- Common -->
+	<icon name="reset" file="graphics/radial/icon_reset.png" />
+	<icon name="reset_all" file="graphics/radial/icon_resetall.png" />
+	
+	<!-- Basic Menu - REQUIRED -->
+	<icon name="menubackground" file="graphics/radial/menubackground.png" />
+	<icon name="menuback" file="graphics/radial/menubackground.png" />
+
+
+</root>

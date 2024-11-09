@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="charsheet_notes" merge="join">
+		<script>
+			function onDrop(x, y, draginfo)
+				if draginfo.isType("shortcut") then
+					local sClass, sRecord = draginfo.getShortcutData();
+						Debug.console("DB.getValue: ", DB.getValue(draginfo.getDatabaseNode(), "name", ""));
+						Debug.console("getDescription: ", draginfo.getDescription());
+
+					local nodeChar = getDatabaseNode();
+					if StringManager.contains({"pcrace"}, sClass) then
+						Debug.console("pcrace!");
+						CharManagerMC.addRaceDB(nodeChar, sClass, sRecord);
+						return true;
+					end
+				end
+			end
+
+		</script>
+		<sheetdata>
+			<frame_char name="detailframe" merge="join">
+				<bounds>0,0,-1,45</bounds>
+			</frame_char>
+			<string_labeled name="pcrace">
+				<anchored to="detailframe" position="insidetopleft" offset="10,10" width="80" height="20" />
+				<labelres>char_label_race</labelres>
+			</string_labeled>
+			<string_labeled name="race" merge="join">
+				<invisible />
+			</string_labeled>
+			<linkfield name="pcracelink" source="pcracelink">
+				<anchored to="detailframe" position="insidetopleft" offset="95,10" width="20" height="20" />
+				<closetoggle />
+				<invisible />
+				<script>
+					function onInit()
+						onValueChanged();
+					end
+					function onValueChanged()
+						if isEmpty() then
+							setVisible(false);
+						else
+							setVisible(true);
+						end
+					end
+				</script>
+			</linkfield>
+			
+			<string_labeled name="gender">
+				<anchored to="detailframe" position="insidetopleft" offset="120,10" width="40" height="20" />
+				<labelres>char_label_gender</labelres>
+			</string_labeled>
+			<string_labeled name="age">
+				<anchored to="gender" position="right" offset="5,0" width="40" height="20" />
+				<labelres>char_label_age</labelres>
+			</string_labeled>
+			<string_labeled name="height">
+				<anchored to="age" position="right" offset="5,0" width="40" height="20" />
+				<labelres>char_label_height</labelres>
+			</string_labeled>
+			<string_labeled name="weight">
+				<anchored to="height" position="right" offset="5,0" width="40" height="20" />
+				<labelres>char_label_weight</labelres>
+			</string_labeled>
+			<number_labeled name="exp">
+				<anchored to="weight" position="right" offset="5,0" width="60" height="20" />
+				<labelres>char_label_experience</labelres>
+			</number_labeled>
+			<number_labeled name="expneeded" source="expneeded">
+				<anchored to="exp" position="right" offset="5,0" width="60" />
+				<labelres>char_label_expneeded</labelres>
+			</number_labeled>
+			<number_labeled name="level" source="pcclasslevel" >
+				<anchored to="expneeded" position="right" offset="5,0" width="50" />
+				<labelres>char_label_level</labelres>
+			</number_labeled>
+
+			<frame_char name="notesframe" merge="join">
+				<bounds>0,235,-1,-175</bounds>
+			</frame_char>
+
+			<frame_char name="levellogframe">
+				<bounds>0,-175,-1,-5</bounds>
+			</frame_char>
+			<label_frametop>
+				<anchored to="levellogframe" />
+				<static text="Advancement Log" />
+			</label_frametop>
+			<ft_data name="levellog" source="levellog">
+				<anchored to="levellogframe">
+					<top offset="30" />
+					<left offset="15" />
+					<right offset="-20" />
+					<bottom offset="-15" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+				<nodrag />
+			</ft_data>
+			<scrollbar_list>
+				<anchored to="levellog" offset="5,0"/>
+				<target>levellog</target>
+			</scrollbar_list>
+
+	  
+		</sheetdata>
+	</windowclass>
+
+</root>

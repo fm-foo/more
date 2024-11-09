@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="masterindexitem_investigator">
+		<margins control="0,0,0,2" />
+		<script file="campaign/scripts/masterindexitem_window.lua" />
+		<sheetdata>
+			<masterindexitem_link name="link" />
+
+			<masterindexitem_anchor_right name="rightanchor" />
+			<masterindexitem_idelete name="idelete" />
+			<masterindexitem_access name="access" />
+			<masterindexitem_owner name="owner" />
+			
+			<masterindexitem_name name="name" />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="mc_investigator">
+		<frame>worldpage</frame>
+		<placement>
+			<size width="400" height="500" />
+		</placement>
+		<sizelimits>
+			<minimum width="400" height="400" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_note</minimize>
+		<playercontrol />
+		<nodelete />
+		<sharable />
+		<tooltip field="name" />
+		<script>
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				
+		--[[		local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				inplace.setReadOnly(bReadOnly);
+				description.setReadOnly(bReadOnly);
+				pcdiscussion.setReadOnly(bReadOnly);
+				status.setReadOnly(bReadOnly);
+				links.setReadOnly(bReadOnly);	]]
+
+			end
+		</script>
+		<sheetdata>
+			<sub_investigator_header name="header">
+				<class>investigator_header</class>
+			</sub_investigator_header>
+
+			<!-- anchor_column_investigator name="columnanchor" />
+			
+			<frame_investigator_content name="contentframe" />
+
+			<scrollbar>
+				<anchored to="contentframe" />
+				<target>contentframe</target>
+			</scrollbar>  -->
+
+			<frame_record_content name="contentframe" />
+
+			<subwindow_record name="main_investigator">
+				<class>investigator_clue</class>
+				<activate />
+			</subwindow_record>
+			<scrollbar_record>
+				<target>main_investigator</target>
+			</scrollbar_record>
+
+			<resize_storybox />
+			<close_storybox />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="investigator_header">
+		<margins control="0,0,0,7" />
+		<script file="campaign/scripts/investigator_header.lua" />
+		<sheetdata>
+			<link_record_header>
+				<class>mc_investigator</class>
+			</link_record_header>
+
+			<anchor_record_header_right name="rightanchor" />
+			<icon_record_locked />
+			<button_record_locked />
+
+			<stringfield name="name">
+				<anchored to="rightanchor" height="24">
+					<top offset="-4" />
+					<left parent="" offset="45" />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<font>reference-h</font>
+				<empty text="&#171; New Clue &#187;" />
+				<nodrag />
+			</stringfield>
+
+			<label name="owner_label">
+				<anchored position="insidetopleft" offset="10,32" />
+				<static text="&#171; Owner &#187;" />
+			</label>
+			<stringcontrol name="owner">
+				<anchored to="owner_label" position="righthigh" offset="5,0" height="20" />
+				<font>reference-r</font>
+				<readonly />
+			</stringcontrol>
+			<buttonc_checkbox name="ispublic">
+				<bounds>-25,32,20,20</bounds>
+				<script>
+					function onValueChanged()
+						window.onPublicChanged();
+					end
+				</script>
+			</buttonc_checkbox>
+			<label name="ispublic_label">
+				<anchored to="ispublic" position="lefthigh" offset="5,0" height="20" />
+				<static text="Public" />
+			</label>
+
+			
+			<label name="sendtochat_label">
+				<anchored to="ispublic" position="left" offset="80,0" height="20" />
+				<static text="Chat" />
+			</label>
+			<button_chat_icon name="button_chat_pcdisc" >
+				<anchored to="ispublic" position="left" offset="55,0" height="20" />
+				<script>
+					function action(draginfo)
+						local nodeWin = window.getDatabaseNode();
+						
+						local sMessage1 = "## Location\n" .. DB.getText(nodeWin, "inplace", 0);
+						local sMessage2 = "\n--- --- --- ---\n## Description\n\n" .. DB.getText(nodeWin, "description", 0);
+						local sMessage3 = "\n--- --- --- ---\n## Discussion\n\n" .. DB.getText(nodeWin, "pcdiscussion", 0);
+						local sMessage4 = "\n--- --- --- ---\n## Links\n\n" .. DB.getText(nodeWin, "links", 0);
+						local sMessage5 = "\n--- --- --- ---\n## Status\n\n" .. DB.getText(nodeWin, "status", 0);
+						local sMessage = sMessage1 .. sMessage2 .. sMessage3 .. sMessage4 .. sMessage5;
+						local sName1 = DB.getText(nodeWin, "name", 0);
+						local sMessage = "Investigator: " .. sName1 .. "\n\n" .. sMessage;
+						
+						if string.len(sMessage) &lt; 50 then sMessage = sMessage .. "\n \n\n\n";
+							elseif string.len(sMessage) &lt; 100 then sMessage = sMessage .. "\n \n\n";
+							elseif string.len(sMessage) &lt; 150 then sMessage = sMessage .. "\n \n";
+							else sMessage = sMessage .. "\n ";
+						end
+
+						msg = {font = "narratorfont", mode = "damned"};
+						msg.text = sMessage;
+						Comm.deliverChatMessage(msg);
+						
+						return true;
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onClickRelease(x, y)
+						return action();
+					end
+				</script>
+			</button_chat_icon>
+			
+			
+			<genericcontrol name="separator">
+				<bounds>5,52,-5,3</bounds>
+				<frame name="separatorline" />
+				<disabled />
+			</genericcontrol>
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="investigator_clue">
+		<margins control="0,0,0,2" />
+		<script file="campaign/scripts/investigator_main.lua" />
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<label_column_header name="inplace_label">
+				<static textres="ref_label_inplace" />
+			</label_column_header>
+			<ft_column_labeled_investigator name="inplace" >
+				<script file="campaign/scripts/column_string2.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_investigator>
+
+			<label_column_header name="description_label">
+				<static textres="ref_label_briefdesc" />
+			</label_column_header>
+			<ft_column_labeled_investigator name="description" >
+				<script file="campaign/scripts/column_string2.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_investigator>
+
+			<label_column_header name="pcdiscussion_label">
+				<static textres="ref_label_briefpcdesc" />
+			</label_column_header>
+			<ft_column_labeled_investigator name="pcdiscussion" >
+				<script file="campaign/scripts/column_string2.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_investigator>
+			<button_pcedit_icon name="button_edit_pcdisc" >
+				<anchored to="pcdiscussion_label" position="left" offset="-70" />
+				<script>
+					function onInit()
+						if User.getCurrentIdentity() ~= nil then return true; 
+						elseif User.isHost() then self.setVisible(false);
+						end
+					end
+						
+					function onClickDown()
+					
+						local sNodePath = DB.getPath(window.getDatabaseNode());
+						local nodeChar = getDatabaseNode();
+						local sPCName = DB.getValue("charsheet." .. User.getCurrentIdentity() .. ".name");
+						local sPlayerPath = "pc." .. sPCName;
+						local sPlayerID = User.getCurrentIdentity();
+						local sPlayerName = User.getUsername();
+
+						PCEditManager.notifyCreateClue(sNodePath, sPCName, sPlayerPath, sPlayerID, sPlayerName);
+					end
+
+					function onClickRelease()					
+						Interface.openWindow("investigator_pcedit", window.getDatabaseNode());
+					end
+				</script>
+			</button_pcedit_icon>
+
+			<label_column_header name="links_label">
+				<static textres="ref_label_links" />
+			</label_column_header>
+			<ft_column_labeled_investigator name="links" >
+				<script file="campaign/scripts/column_string2.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_investigator>
+
+			<label_column_header name="status_label">
+				<static textres="ref_label_status" />
+			</label_column_header>
+			<ft_column_labeled_investigator name="status" >
+				<script file="campaign/scripts/column_string2.lua" />
+				<separator>line_desc</separator>
+			</ft_column_labeled_investigator>
+			
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="investigator_pcedit">
+		<frame>worldpage</frame>
+		<placement>
+			<size width="400" height="500" />
+		</placement>
+		<sizelimits>
+			<minimum width="400" height="300" />
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<nodelete />
+		<playercontrol />
+		<sharable />
+		<sheetdata>
+
+			<anchor_column name="columnanchor" />
+			
+			<formattedtextcontrol name="pcnewdesc">
+				<script>
+					function onInit()
+						setReadOnly(false);
+					end
+				</script>
+				<frame mergerule="replace" name="fieldlight" offset="27,25,27,25" />
+				<anchored>
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="80" />
+					<left offset="50" />
+					<right offset="-50" />
+				</anchored>
+			</formattedtextcontrol>
+			
+			<scrollbar>
+				<target>pcnewdesc</target>
+			</scrollbar>
+			
+			<button_pcsubmit_icon name="button_pcsubmit_pcnotes" >
+				<anchored position="insidetopleft" offset="10,10" />
+				<script>
+					function onClickRelease()
+
+						local nodeWin = window.getDatabaseNode();
+						local sPCNewdesc = window.pcnewdesc.getValue();
+						local sPCName = DB.getValue("charsheet." .. User.getCurrentIdentity() .. ".name");
+						local sInvestigatorPath = window.getDatabaseNode().getPath();
+						PCEditManager.notifyUpdateClue(sInvestigatorPath, sPCNewdesc, sPCName);
+						window.close();
+					end
+				</script>
+			</button_pcsubmit_icon>
+			
+			<resize_recordsheet />
+			<close_recordsheet />
+		</sheetdata>
+	</windowclass>
+	
+
+</root>

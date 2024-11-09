@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<string name="ref_label_listcost">Cost</string>
+	<string name="ref_label_listname">Name</string>
+	<string name="ref_label_listdamage">Damage</string>
+	<string name="ref_label_listweight">Weight</string>
+	<string name="ref_label_listproperties">Properties</string>
+	<string name="ref_label_listac">AC</string>
+	<string name="ref_label_listcarryingcapacity">Capacity</string>
+	<string name="ref_label_listspeed">Speed</string>
+	<string name="item_label_weight">Weight</string>
+	<string name="item_label_damage">Damage</string>
+	<string name="item_label_properties">Properties</string>
+	<string name="item_label_bonus">Bonus</string>
+	<string name="item_label_ac">AC</string>
+	<string name="item_label_carryingcapacity">Capacity</string>
+	<string name="item_label_speed">Speed</string>
+
+</root>
