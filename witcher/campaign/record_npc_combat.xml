@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="npc_combat">
+		<script file="campaign/scripts/char_combat.lua" />
+		<sheetdata>
+			<!--COMBAT STATS REMINDER-->
+			<frame_char name="combat_frame">
+				<bounds>15,0,-29,100</bounds>
+			</frame_char>
+			
+			<!--hp-->
+			<label>
+				<anchored to="combat_frame" position="insidetopleft" offset="20,15" width="90"/>
+				<center />
+				<static textres="char_derivedstatslabel_hit_points" />
+			</label>
+			<number_statcurrentvalue name="hit_points_combat" source="attributs.hit_points">
+				<anchored to="combat_frame" position="insidetopleft" offset="20,35" width="30" height="20" />
+				<script>
+					function onValueChanged()
+						window.onHPChanged();
+					end
+				</script>
+			</number_statcurrentvalue>
+			<number_derivedstat name="hit_pointsmax_combat" source="attributs.hit_pointsmax">
+				<anchored to="hit_points_combat" position="right" offset="30,0" width="30" height="20" />
+			</number_derivedstat>
+			<label>
+				<anchored to="hit_pointsmax_combat" position="right" offset="-47,0" />
+				<static textres="char_special_divide" />
+			</label>
+			
+			<!--stamina-->
+			<label>
+				<anchored to="combat_frame" position="insidetopleft" offset="145,15" width="90"/>
+				<center />
+				<static textres="char_derivedstatslabel_stamina" />
+			</label>
+			<number_statcurrentvalue name="stamina_combat" source="attributs.stamina">
+				<anchored to="combat_frame" position="insidetopleft" offset="145,35" width="30" height="20" />
+			</number_statcurrentvalue>
+			<number_derivedstat name="staminamax_combat" source="attributs.staminamax">
+				<anchored to="stamina_combat" position="right" offset="30,0" width="30" height="20" />
+			</number_derivedstat>
+			<label>
+				<anchored to="staminamax_combat" position="right" offset="-47,0" />
+				<static textres="char_special_divide" />
+			</label>
+			
+			<!--recovery-->
+			<label>
+				<anchored to="combat_frame" position="insidetopleft" offset="270,15" width="45"/>
+				<center />
+				<static textres="char_derivedstatslabel_recoveryshort" />
+			</label>
+			<number_derivedstat name="recovery_combat" source="attributs.recovery">
+				<anchored to="combat_frame" position="insidetopleft" offset="270,35" width="30" height="20" />
+			</number_derivedstat>
+			<buttoncontrol name="button_recovery">
+				<anchored to="recovery_combat" position="right" offset="5,0" width="20" height="20" />
+				<icon normal="button_action_heal" pressed="button_action_heal_down" />
+				<cursor hover="hand" />
+				<nodrag />
+				<script>
+					function action(draginfo)
+						window.onRecoverAction();
+					end
+
+					function onButtonPress()
+						action();
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			
+			<!--stun-->
+			<label>
+				<anchored to="combat_frame" position="insidetopleft" offset="360,15"/>
+				<static textres="char_derivedstatslabel_stun" />
+			</label>
+			<number_derivedstat_rollable name="stun_combat" source="attributs.stun">
+				<anchored to="combat_frame" position="insidetopleft" offset="360,35" width="30" height="20" />
+				<script>
+					function action(draginfo)
+						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+						
+						ActionSave.performRoll(draginfo, rActor, "stun");
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onDoubleClick(x,y)
+						return action();
+					end
+				</script>
+			</number_derivedstat_rollable>
+			
+			<!--initiative-->
+			<label>
+				<anchored to="combat_frame" position="insidetopleft" offset="430,15" width="30"/>
+				<center />
+				<static textres="char_combat_initiative" />
+			</label>
+			<number_derivedstat_rollable name="init_combat" source="attributs.reflex">
+				<anchored to="combat_frame" position="insidetopleft" offset="430,35" width="30" height="20" />
+				<displaysign /> 
+				<script>
+					function action(draginfo)
+						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+						ActionInit.performRoll(draginfo, rActor);
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onDoubleClick(x,y)
+						return action();
+					end
+				</script>
+			</number_derivedstat_rollable>
+
+			<label name="label_defense">
+				<anchored to="combat_frame" position="insidetopleft" offset="20,65" width="100"/>
+				<static textres="char_label_defenseActions"/>
+			</label>
+			
+			<!-- Dodge / Escape -->
+			<label name="label_dodgeaction">
+				<anchored to="combat_frame" position="insidetopleft" offset="145,65" width="100"/>
+				<static textres="char_skill_dodgeEscape_label"/>
+			</label>
+			<buttoncontrol name="button_dodge">
+				<anchored to="label_dodgeaction" position="right" offset="10,0" width="20" height="20" />
+				<icon normal="button_action_dodge" />
+				<cursor hover="hand" />
+				<nodrag />
+				<script>
+					function action(draginfo)
+						window.onDodgeAction(draginfo);
+					end
+
+					function onButtonPress()
+						action();
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			
+			<!-- Reposition -->
+			<buttoncontrol name="button_reposition">
+				<anchored to="combat_frame" position="insidetopleft" offset="400,65" width="20" height="20" />
+				<icon normal="button_action_reposition" />
+				<cursor hover="hand" />
+				<nodrag />
+				<script>
+					function action(draginfo)
+						window.onRepositionAction(draginfo);
+					end
+
+					function onButtonPress()
+						action();
+					end
+
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			<label name="label_reposition">
+				<anchored to="button_reposition" position="left" offset="10,0" width="80"/>
+				<right/>
+				<static textres="char_label_reposition"/>
+			</label>
+			
+			
+			<!-- Combat Actions frame-->
+			<frame_char name="combat_details_frame">
+				<bounds>15,105,-29,-10</bounds>
+			</frame_char>
+			
+			<!-- weapons / brawling -->
+			<subwindow name="combat_details">
+				<anchored to="combat_details_frame" position="over" offset="-8,-10">
+					<bottom offset="-50" />
+				</anchored>
+				<activate />
+				<class>npc_combat_details</class>
+			</subwindow>
+			<scrollbar>
+				<anchored to="combat_details" position="right" offset="-2,-4" width="20">
+					<bottom offset="20" />
+				</anchored>
+				<target>combat_details</target>
+			</scrollbar>
+		</sheetdata>
+	</windowclass>
+	
+	<!--WEAPONS, BRAWLING AND ARMOR DETAILS -->
+	<windowclass name="npc_combat_details">
+		<script file="campaign/scripts/char_combat_details.lua" />
+		<sheetdata>
+			<!-- WEAPONS -->
+			<!-- section header (show/hide list on click) -->
+			<genericcontrol name="icon_weapon">
+				<anchored position="insidetopleft" offset="10,10" width="20" height="20" />
+				<icon>char_weapon</icon>
+			</genericcontrol>
+			<label name="label_weapon">
+				<anchored>
+					<top offset="10" />
+					<left parent="icon_weapon" anchor="right" offset="10" />
+					<right offset="-8" />
+				</anchored>
+				<static textres="char_label_weapons" />
+				<script>
+					function onClickDown(button, x, y)
+						return window.onHeaderClickDown("weapon");
+					end
+					
+					function onClickRelease(button, x, y)
+						return window.onHeaderClickRelease("weapon");
+					end
+				</script>
+			</label>
+			<genericcontrol>
+				<bounds>6,8,-3,24</bounds>
+				<frame name="groupbox2" offset="6,6,6,6" />
+				<disabled />
+			</genericcontrol>
+
+			<!-- list headers -->
+			<genericcontrol name="weaponlist_headers">
+				<bounds>6,24,-6,36</bounds>
+				<frame name="headertitle" />
+			</genericcontrol>
+			<label>
+				<anchored position="insidetopleft" offset="5,36" width="29" />
+				<center />
+				<static textres="char_label_weapontype" />
+			</label>
+			<label>
+				<anchored position="insidetopleft" offset="40,36" width="250"/>
+				<!-- <center /> -->
+				<static textres="char_label_weaponname" />
+			</label>
+			<label name="weapon_reliability_label">
+				<anchored position="insidetopright" offset="228,36" width="29"/>
+				<center />
+				<static textres="char_label_weaponreliability" />
+			</label>
+			<label name="weapon_damage_label">
+				<anchored to="weapon_reliability_label" position="right" offset="23,0" width="50" />
+				<center />
+				<static textres="char_label_weapondamage" />
+			</label>
+			<label name="weapon_attacks_label">
+				<anchored to="weapon_damage_label" position="right" offset="17,0" width="65" />
+				<center />
+				<static textres="npc_label_weaponattacks" />
+			</label>
+			<label>
+				<anchored to="weapon_attacks_label" position="right" offset="12,0" width="50" />
+				<center />
+				<static textres="char_label_weapondefense" />
+			</label>
+			
+			<windowlist  name="weaponlist">
+				<datasource>.weaponlist</datasource>
+				<sortby><control>name</control></sortby>
+				<script file="campaign/scripts/char_weaponlist.lua" />
+				<anchored>
+					<top offset="60" />
+					<left />
+					<right />
+				</anchored>
+				<class>npc_weapon</class>
+				<noscroll />
+			</windowlist>
+			
+			<!-- ARMOR -->
+			<genericcontrol name="armor_divider">
+				<anchored to="weaponlist" position="below" offset="0,5" height="3" />
+				<frame name="separatorline" />
+				<invisible />
+			</genericcontrol>
+			
+			<!-- section header (show/hide list on click) -->
+			<genericcontrol name="icon_armor">
+				<anchored to="armor_divider" position="belowleft" offset="10,14" width="20" height="20" />
+				<icon>char_armor</icon>
+			</genericcontrol>
+			<label name="label_armor">
+				<anchored>
+					<top parent="icon_armor" offset="0" />
+					<left parent="icon_armor" anchor="right" offset="10" />
+					<right offset="-8" />
+				</anchored>
+				<static textres="char_label_armor" />
+				<script>
+					function onClickDown(button, x, y)
+						return window.onHeaderClickDown("armor");
+					end
+					
+					function onClickRelease(button, x, y)
+						return window.onHeaderClickRelease("armor");
+					end
+				</script>
+			</label>
+			<genericcontrol name="armorheaderframe">
+				<anchored>
+					<top parent="armor_divider" anchor="bottom" offset="13" />
+					<bottom parent="armor_divider" anchor="bottom" offset="38" />
+					<left/>
+					<right/>
+				</anchored>
+				<frame name="groupbox2" offset="6,6,6,6" />
+				<disabled />
+			</genericcontrol>
+
+			<!-- list headers-->
+			<genericcontrol name="armorlist_headers">
+				<anchored>
+					<top parent="armorheaderframe" anchor="bottom" offset="0" />
+					<bottom parent="armorheaderframe" anchor="bottom" offset="26" />
+					<left offset="5"/>
+					<right offset="-5" />
+				</anchored>
+				<frame name="headertitle" />
+			</genericcontrol>
+			<label>
+				<anchored to="armorlist_headers" position="insidetopleft" offset="5,3" width="250"/>
+				<static textres="char_label_brawlingname" />
+			</label>
+			<label name="armor_location_label">
+				<anchored to="armorlist_headers" position="insidetopright" offset="150,3" width="50" />
+				<center />
+				<static textres="char_label_armorlocation" />
+			</label>
+			<label name="armor_sp_label">
+				<anchored to="armor_location_label" position="right" offset="55,0" width="20" />
+				<center />
+				<static textres="char_label_armorsp" />
+			</label>
+			<label name="armor_ev_label">
+				<anchored to="armor_sp_label" position="right" offset="25,0" width="20" />
+				<center />
+				<static textres="char_label_armorev" />
+			</label> 
+
+			<windowlist  name="armorlist">
+				<datasource>.armorlist</datasource>
+				<sortby><control>name</control></sortby>
+				<script file="campaign/scripts/char_armorlist.lua" />
+				<anchored>
+					<top parent="armorlist_headers" anchor="bottom" offset="0" />
+					<left />
+					<right />
+				</anchored>
+				<class>char_armor</class>
+				<noscroll />
+			</windowlist>
+		</sheetdata>
+	</windowclass>
+	
+	<!--Weapon class-->
+	<windowclass name="npc_weapon">
+		<margins control="0,0,0,5" />
+		<script file="campaign/scripts/char_weapon.lua" />
+		<sheetdata>
+			<genericcontrol name="leftanchor">
+				<anchored width="0" height="0">
+					<top offset="10" />
+					<left offset="25" />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+			<genericcontrol name="rightanchor">
+				<anchored width="0" height="0">
+					<top offset="10" />
+					<right />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+			
+			<!--type-->
+			<buttonfield name="type">
+				<anchored width="25" height="25">
+					<top offset="5" />
+					<right parent="leftanchor" anchor="left" relation="relative" offset="10" />
+				</anchored>
+				<state icon="char_weapon_melee" tooltipres="char_tooltip_weapontypemelee" />
+				<state icon="char_weapon_ranged" tooltipres="char_tooltip_weapontyperanged" />
+			</buttonfield>
+			
+			<!-- Edit / See details -->
+			<buttoncontrol name="activatedetail">
+				<anchored to="rightanchor" width="20" height="20">
+					<top/>
+					<right anchor="left" relation="relative" offset="0" />
+				</anchored>
+				<state icon="button_details" />
+				<cursor hover="hand" />
+				<script>
+					function onButtonPress()
+						Interface.openWindow("char_weapon_editor", window.getDatabaseNode());
+					end
+				</script>
+			</buttoncontrol>
+
+			<!--defense actions-->
+			<buttoncontrol name="button_melee_block">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-2" />
+				</anchored>
+				<icon normal="melee_block" pressed="melee_block" />
+				<tooltip textres="char_tooltip_block" />
+				<cursor hover="hand" />
+				<script>
+					function action(draginfo)
+						ActionDefense.performRoll(draginfo, window.getDatabaseNode(), "block");
+					end
+
+					function onButtonPress()
+						action();
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			<buttoncontrol name="button_melee_parry">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-2" />
+				</anchored>
+				<icon normal="melee_parry" pressed="melee_parry" />
+				<tooltip textres="char_tooltip_parry" />
+				<cursor hover="hand" />
+				<script>
+					function action(draginfo)
+						ActionDefense.performRoll(draginfo, window.getDatabaseNode(), "parry");
+					end
+
+					function onButtonPress()
+						action();
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			<genericcontrol name="spacer_for_ranged_defense">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-2" />
+				</anchored>
+				<disabled />
+			</genericcontrol>
+			<!--attack actions-->
+			<!--ROF-->
+			<number_statcurrentvalue name="rof">
+				<anchored to="rightanchor" width="25" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-20" />
+				</anchored>
+			</number_statcurrentvalue>
+
+			<!--melee-->
+			<buttoncontrol name="button_melee_attack">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<icon normal="attack_melee_normal" pressed="attack_melee_normal" />
+				<tooltip textres="char_tooltip_normalattack" />
+				<cursor hover="hand" />
+				<script>
+					function action(draginfo)
+						ActionAttack.performRoll(draginfo, window.getDatabaseNode(), "normal");
+					end
+
+					function onButtonPress()
+						action();
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			<!--range-->
+			<buttoncontrol name="button_range_attack">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<icon normal="attack_range_normal" pressed="attack_range_normal" />
+				<tooltip textres="char_tooltip_normalattack" />
+				<cursor hover="hand" />
+				<script>
+					function action(draginfo)
+						ActionAttack.performRoll(draginfo, window.getDatabaseNode(), "normal");
+					end
+
+					function onButtonPress()
+						action();
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						action(draginfo);
+						return true;
+					end
+				</script>
+			</buttoncontrol>
+			
+			<!--damage-->
+			<simplestringc name="damageview">
+				<anchored to="rightanchor" width="60">
+					<top />
+					<right anchor="left" relation="relative" offset="-15" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+				<frame name="fielddark" offset="7,5,7,5" />
+				<cursor hover="hand" />
+				<readonly />
+				<script>
+					function onDoubleClick(x,y)
+						return window.onDamageAction();
+					end			
+					function onDragStart(button, x, y, draginfo)
+						return window.onDamageAction(draginfo);
+					end
+				</script>
+			</simplestringc>
+			
+			<!--Reliability-->
+			<number_statcurrentvalue name="reliability">
+				<anchored to="rightanchor" width="30" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-20" />
+				</anchored>
+			</number_statcurrentvalue>
+			
+			<!--name-->
+			<stringu name="name">
+				<anchored height="20">
+					<top offset="10" />
+					<left parent="leftanchor" anchor="right" relation="relative" offset="15" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</stringu>
+			
+			<!-- Ranged specific fields -->
+			<label name="label_range">
+				<anchored width="70">
+					<top parent="name" anchor="bottom" relation="relative" offset="5" />
+					<left offset="15" />
+				</anchored>
+				<static textres="char_label_weaponrange" />
+			</label>
+			<basicnumber name="rangeincrement">
+				<anchored to="label_range" position="righthigh" offset="-6,0" width="30" height="20" />
+				<hideonvalue>0</hideonvalue>
+				<min>0</min>
+			</basicnumber>
+			<label name="label_ammo">
+				<anchored width="50">
+					<top parent="label_range" />
+					<left offset="130" />
+				</anchored>
+				<static textres="char_label_weaponammo" />
+			</label>
+			<basicnumber name="maxammo">
+				<anchored to="label_ammo" position="righthigh" width="30" height="20" />
+				<min>0</min>
+				<max>100</max>
+			</basicnumber>
+			<state_charammocounter name="ammocounter">
+				<anchored to="maxammo" position="righthigh" offset="5,0" />
+			</state_charammocounter>
+		</sheetdata>
+	</windowclass>
+</root>

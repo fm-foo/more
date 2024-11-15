@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<font name="emotefont">
+		<ttf file="graphics/fonts/Minion Pro Semibold.ttf" name="Minion Pro Semibold" size="20" />
+		<color value="#000" />
+	</font>
+	<font name="emotefont-red">
+		<ttf file="graphics/fonts/Minion Pro Semibold.ttf" name="Minion Pro Semibold" size="18" />
+		<color value="#DD0000" />
+	</font>
+	<font name="dietotal">
+		<ttf file="graphics/fonts/Minion Pro Bold.ttf" name="Minion Pro Bold" size="28" />
+		<color value="#000" />
+	</font>
+	<!-- Utility Windows -->
+	<font name="utility_label">
+		<ttf file="graphics/fonts/Noto_Sans/NotoSans-Bold.ttf" name="Noto Sans Bold" size="18" />
+		<color value="#000" />
+	</font>
+	<font name="sheetlabel_ct">
+		<ttf file="graphics/fonts/Noto_Sans/NotoSans-Bold.ttf" name="Noto Sans Bold" size="16" />
+		<color value="#000" />
+	</font>	
+</root>

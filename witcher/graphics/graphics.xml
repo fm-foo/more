@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<includefile source="graphics/graphics_frames.xml" />
+	<includefile source="graphics/graphics_fonts.xml" />
+	<includefile source="graphics/graphics_portraits.xml" />
+	<includefile source="graphics/graphics_icons.xml" />
+	<includefile source="graphics/graphics_radial.xml" />
+	<script name="DesktopManagerWitcher" file="graphics/scripts/data_library_com.lua" />
+
+
+	<script name="DecalWitcher">
+		function onInit()
+			DecalManager.setDefault("images/decals/witchertrpg_decal.png@WitcherTRPG Assets");
+		end
+	</script>
+</root>

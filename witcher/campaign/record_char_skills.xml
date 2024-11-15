@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<!--window-->
+	<windowclass name="charsheet_skills">
+		<sheetdata>
+			<frame_char name="skills_frame">
+				<bounds>15,0,-29,-10</bounds>
+				<invisible />
+			</frame_char>
+		
+			<subwindow name="skills_details">
+				<!-- <anchored to="skills_frame" position="over" offset="-8,-10"> -->
+				<anchored to="skills_frame" position="over" offset="15,0">
+					<bottom offset="0" />
+				</anchored>
+				<activate />
+				<class>char_skills_details</class>
+			</subwindow>
+			<scrollbar>
+				<anchored to="skills_details" position="right" offset="-25,-4" width="20">
+					<bottom offset="20" />
+				</anchored>
+				<target>skills_details</target>
+			</scrollbar>
+		</sheetdata>
+	</windowclass>
+
+	<!-- MAIN LAYOUT-->
+	<windowclass name="char_skills_details">
+		<script file="campaign/scripts/char_skills_details.lua" />
+		<sheetdata>
+			<frame_char name="label_profession_frame">
+				<bounds>15,0,-19,380</bounds>
+			</frame_char>
+			<!-- PROFESSION -->
+			<!-- section header -->
+			<frame_label name="label_profession">
+				<anchored to="label_profession_frame" />
+				<static textres="char_label_abilities" />
+				<frame name="headerref" />
+			</frame_label>
+			<!--content-->
+			<subwindow name="profession_details">
+				<anchored>
+					<top parent="label_profession" anchor="bottom" offset="0" />
+					<left parent="label_profession_frame" anchor="left" offset="15" />
+					<right parent="label_profession_frame" anchor="right" offset="-15" />
+					<bottom parent="label_profession_frame" anchor="bottom" offset="0" />
+				</anchored>
+				<activate />
+				<class>char_profession_details</class>
+			</subwindow>
+
+			<!-- <genericcontrol name="skills_divider"> -->
+				<!-- <anchored to="profession_details" position="below" offset="0,15" height="3" /> -->
+				<!-- <frame name="separatorline" /> -->
+				<!-- <invisible /> -->
+			<!-- </genericcontrol> -->
+
+			<!-- SKILL LIST -->
+			<!-- section header -->
+			<!-- <genericcontrol name="label_skilllist_frame"> -->
+				<!-- <anchored> -->
+					<!-- <top parent="skills_divider" anchor="bottom" offset="13" /> -->
+					<!-- <bottom parent="skills_divider" anchor="bottom" offset="38" /> -->
+					<!-- <left/> -->
+					<!-- <right/> -->
+				<!-- </anchored> -->
+				<!-- <frame name="groupbox2" offset="6,6,6,6" /> -->
+				<!-- <disabled /> -->
+			<!-- </genericcontrol> -->
+			<!-- <label_frametop name="label_skilllist"> -->
+				<!-- <anchored to="label_skilllist_frame" offset="-7,0" /> -->
+				<!-- <static textres="char_label_skills" /> -->
+			<!-- </label_frametop> -->
+			
+			<frame_char name="label_skilllist_frame">
+				<!-- <bounds>15,0,-19,370</bounds> -->
+				<anchored>
+					<top parent="label_profession_frame" anchor="bottom" offset="20" />
+					<bottom parent="label_profession_frame" anchor="bottom" offset="1250" />
+					<left parent="label_profession_frame" anchor="left" offset="0" />
+					<right parent="label_profession_frame" anchor="right" offset="0" />
+				</anchored>
+			</frame_char>
+			<frame_label name="label_skilllist">
+				<anchored to="label_skilllist_frame" />
+				<static textres="char_label_skills" />
+				<frame name="headerref" />
+			</frame_label>
+			
+			<!--content-->
+			<subwindow name="skilllist_details">
+				<!-- <anchored> -->
+					<!-- <top parent="label_skilllist" anchor="bottom" offset="0" /> -->
+					<!-- <left /> -->
+					<!-- <right /> -->
+				<!-- </anchored> -->
+				<anchored>
+					<top parent="label_skilllist" anchor="bottom" offset="0" />
+					<left parent="label_skilllist_frame" anchor="left" offset="15" />
+					<right parent="label_skilllist_frame" anchor="right" offset="-15" />
+					<bottom parent="label_skilllist_frame" anchor="bottom" offset="0" />
+				</anchored>
+				<activate />
+				<class>char_skilllist_details</class>
+			</subwindow>
+
+		</sheetdata>
+	</windowclass>
+
+	<!-- PROFESSION CONTENT-->
+	<windowclass name="char_profession_details">
+		<script file="campaign/scripts/char_profession_details.lua" />
+		<sheetdata>
+			<genericcontrol name="leftanchor">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+			<genericcontrol name="rightanchor">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<right />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+			<!-- Variables cachees -->
+			<hn name="intelligence" source="attributs.intelligence" />
+			<hn name="reflex" source="attributs.reflex" />
+			<hn name="dexterity" source="attributs.dexterity" />
+			<hn name="body" source="attributs.body" />
+			<hn name="empathy" source="attributs.empathy" />
+			<hn name="crafting" source="attributs.crafting" />
+			<hn name="will" source="attributs.will" />
+			
+			<!-- DEFINING SKILL -->
+			<label name="definingSkill_label">
+				<anchored to="leftanchor" width="70" height="20">
+					<top offset="15" />
+					<left offset="5" />
+				</anchored>
+				<static textres="char_label_definingSkill" />
+			</label>
+			<!--hidden description-->
+			<simplestring name="definingSkill_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--value-->
+			<number_skill_rollable name="definingSkill_value" source="skills.definingSkill_value">
+				<anchored width="30" height="20">
+					<top parent="definingSkill_label" offset="0" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<script>
+					function action(draginfo)
+						local nStat = 0;
+						local sStat = "";
+						
+						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+						
+						sStat = window.definingSkill_stat.getValue();
+						sStat, nStat = getStat(rActor, sStat);
+						
+						ActionSkill.performRoll(draginfo, rActor, window.definingSkill_name.getValue(), getValue() + nStat, sStat);
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+					
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch1_ability1_value.setReadOnly(false);
+							window.branch2_ability1_value.setReadOnly(false);
+							window.branch3_ability1_value.setReadOnly(false);
+						else
+							window.branch1_ability1_value.setReadOnly(true);
+							window.branch2_ability1_value.setReadOnly(true);
+							window.branch3_ability1_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						setReadOnly(false);
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--stat-->
+			<cycler_ability name="definingSkill_stat">
+				<anchored width="40" height="20">
+					<top parent="definingSkill_value" offset="0" />
+					<right parent="definingSkill_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--name-->
+			<stringu name="definingSkill_name" source="skills.definingSkill_name">
+				<anchored to="definingSkill_label" height="20">
+					<top offset="0" />
+					<left anchor="right" offset="20" />
+					<right parent="definingSkill_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="definingSkill_editablewidget">
+				<anchored to="definingSkill_name" width="15" height="15">
+					<top offset="3" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			
+			<!-- Branche A -->
+			<simplestringc name="branch1_label" source="skills.branch1_label">
+				<anchored height="24">
+					<top parent="leftanchor" offset="38" />
+					<left parent="leftanchor" offset="15" />
+					<right parent="rightanchor" offset="5" />
+				</anchored>
+				<frame name="headertitle" />
+				<default>
+					<textres>char_label_defaultBranchName</textres>
+				</default>
+				<disabled/>
+			</simplestringc>	
+			<!--editable widget-->
+			<genericcontrol name="branch1_editablewidget">
+				<anchored to="branch1_label" width="15" height="15">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!--A1 hidden description-->
+			<simplestring name="branch1_ability1_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--A1 value-->
+			<number_skill_rollable name="branch1_ability1_value" source="skills.ability.branch1_ability1_value">
+				<anchored width="30" height="20">
+					<top parent="branch1_label" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("1", "1")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch1_ability2_value.setReadOnly(false);
+							window.branch1_ability3_value.setReadOnly(false);
+						else
+							window.branch1_ability2_value.setReadOnly(true);
+							window.branch1_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--A1 stat-->
+			<cycler_ability name="branch1_ability1_stat" source="skills.ability.branch1_ability1_stat">
+				<anchored width="40" height="20">
+					<top parent="branch1_ability1_value" offset="0" />
+					<right parent="branch1_ability1_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--A1 name-->
+			<stringu name="branch1_ability1_name" source="skills.ability.branch1_ability1_name">
+				<anchored to="branch1_label" height="20">
+					<top offset="25" />
+					<left offset="20" />
+					<right parent="branch1_ability1_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch1_ability1_editablewidget">
+				<anchored to="branch1_ability1_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!--A2 hidden description-->
+			<simplestring name="branch1_ability2_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--A2 value-->
+			<number_skill_rollable name="branch1_ability2_value" source="skills.ability.branch1_ability2_value">
+				<anchored width="30" height="20">
+					<top parent="branch1_ability1_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("1", "2")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch1_ability3_value.setReadOnly(false);
+						else
+							window.branch1_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--A2 stat-->
+			<cycler_ability name="branch1_ability2_stat" source="skills.ability.branch1_ability2_stat">
+				<anchored width="40" height="20">
+					<top parent="branch1_ability2_value" offset="0" />
+					<right parent="branch1_ability2_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--A2 name-->
+			<stringu name="branch1_ability2_name" source="skills.ability.branch1_ability2_name">
+				<anchored to="branch1_ability1_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch1_ability2_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch1_ability2_editablewidget">
+				<anchored to="branch1_ability2_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!--A3 hidden description-->
+			<simplestring name="branch1_ability3_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--A3 value-->
+			<number_skill_rollable name="branch1_ability3_value" source="skills.ability.branch1_ability3_value">
+				<anchored width="30" height="20">
+					<top parent="branch1_ability2_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("1", "3")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onInit()
+						super.onInit();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--A3 stat-->
+			<cycler_ability name="branch1_ability3_stat" source="skills.ability.branch1_ability3_stat">
+				<anchored width="40" height="20">
+					<top parent="branch1_ability3_value" offset="0" />
+					<right parent="branch1_ability3_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--A3 name-->
+			<stringu name="branch1_ability3_name" source="skills.ability.branch1_ability3_name">
+				<anchored to="branch1_ability2_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch1_ability3_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch1_ability3_editablewidget">
+				<anchored to="branch1_ability3_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!-- Branche B -->
+			<simplestringc name="branch2_label" source="skills.branch2_label">
+				<anchored height="24">
+					<top parent="branch1_ability3_name" offset="30" />
+					<left parent="branch1_ability3_name" offset="-20" />
+					<right parent="rightanchor" offset="5" />
+				</anchored>
+				<frame name="headertitle" />
+				<default>
+					<textres>char_label_defaultBranchName</textres>
+				</default>
+				<disabled/>
+			</simplestringc>	
+			<!--editable widget-->
+			<genericcontrol name="branch2_editablewidget">
+				<anchored to="branch2_label" width="15" height="15">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!--B1 hidden description-->
+			<simplestring name="branch2_ability1_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--B1 value-->
+			<number_skill_rollable name="branch2_ability1_value" source="skills.ability.branch2_ability1_value">
+				<anchored width="30" height="20">
+					<top parent="branch2_label" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("2", "1")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch2_ability2_value.setReadOnly(false);
+							window.branch2_ability3_value.setReadOnly(false);
+						else
+							window.branch2_ability2_value.setReadOnly(true);
+							window.branch2_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--B1 stat-->
+			<cycler_ability name="branch2_ability1_stat" source="skills.ability.branch2_ability1_stat">
+				<anchored width="40" height="20">
+					<top parent="branch2_ability1_value" offset="0" />
+					<right parent="branch2_ability1_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--B1 name-->
+			<stringu name="branch2_ability1_name" source="skills.ability.branch2_ability1_name">
+				<anchored to="branch2_label" height="20">
+					<top offset="25" />
+					<left offset="20" />
+					<right parent="branch2_ability1_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch2_ability1_editablewidget">
+				<anchored to="branch2_ability1_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+						
+			<!--B2 hidden description-->
+			<simplestring name="branch2_ability2_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--B2 value-->
+			<number_skill_rollable name="branch2_ability2_value" source="skills.ability.branch2_ability2_value">
+				<anchored width="30" height="20">
+					<top parent="branch2_ability1_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("2", "2")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch2_ability3_value.setReadOnly(false);
+						else
+							window.branch2_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--B2 stat-->
+			<cycler_ability name="branch2_ability2_stat" source="skills.ability.branch2_ability2_stat">
+				<anchored width="40" height="20">
+					<top parent="branch2_ability2_value" offset="0" />
+					<right parent="branch2_ability2_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--B2 name-->
+			<stringu name="branch2_ability2_name" source="skills.ability.branch2_ability2_name">
+				<anchored to="branch2_ability1_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch2_ability2_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch2_ability2_editablewidget">
+				<anchored to="branch2_ability2_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+
+			<!--B3 hidden description-->
+			<simplestring name="branch2_ability3_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--B3 value-->
+			<number_skill_rollable name="branch2_ability3_value" source="skills.ability.branch2_ability3_value">
+				<anchored width="30" height="20">
+					<top parent="branch2_ability2_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("2", "3")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onInit()
+						super.onInit();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--B3 stat-->
+			<cycler_ability name="branch2_ability3_stat" source="skills.ability.branch2_ability3_stat">
+				<anchored width="40" height="20">
+					<top parent="branch2_ability3_value" offset="0" />
+					<right parent="branch2_ability3_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--B3 name-->
+			<stringu name="branch2_ability3_name" source="skills.ability.branch2_ability3_name">
+				<anchored to="branch2_ability2_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch2_ability3_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch2_ability3_editablewidget">
+				<anchored to="branch2_ability3_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+
+			<!-- Branche C -->
+			<simplestringc name="branch3_label" source="skills.branch3_label">
+				<anchored height="24">
+					<top parent="branch2_ability3_name" offset="30" />
+					<left parent="branch2_ability3_name" offset="-20" />
+					<right parent="rightanchor" offset="5" />
+				</anchored>
+				<frame name="headertitle" />
+				<default>
+					<textres>char_label_defaultBranchName</textres>
+				</default>
+				<disabled/>
+			</simplestringc>	
+			<!--editable widget-->
+			<genericcontrol name="branch3_editablewidget">
+				<anchored to="branch3_label" width="15" height="15">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			<!--C1 hidden description-->
+			<simplestring name="branch3_ability1_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--C1 value-->
+			<number_skill_rollable name="branch3_ability1_value" source="skills.ability.branch3_ability1_value">
+				<anchored width="30" height="20">
+					<top parent="branch3_label" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("3", "1")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch3_ability2_value.setReadOnly(false);
+							window.branch3_ability3_value.setReadOnly(false);
+						else
+							window.branch3_ability2_value.setReadOnly(true);
+							window.branch3_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--C1 stat-->
+			<cycler_ability name="branch3_ability1_stat" source="skills.ability.branch3_ability1_stat">
+				<anchored width="40" height="20">
+					<top parent="branch3_ability1_value" offset="0" />
+					<right parent="branch3_ability1_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--C1 name-->
+			<stringu name="branch3_ability1_name" source="skills.ability.branch3_ability1_name">
+				<anchored to="branch3_label" height="20">
+					<top offset="25" />
+					<left offset="20" />
+					<right parent="branch3_ability1_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch3_ability1_editablewidget">
+				<anchored to="branch3_ability1_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			
+			<!--C2 hidden description-->
+			<simplestring name="branch3_ability2_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--C2 value-->
+			<number_skill_rollable name="branch3_ability2_value" source="skills.ability.branch3_ability2_value">
+				<anchored width="30" height="20">
+					<top parent="branch3_ability1_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("3", "2")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onValueChanged()
+						if getValue() &gt; 4 then
+							window.branch3_ability3_value.setReadOnly(false);
+						else
+							window.branch3_ability3_value.setReadOnly(true);
+						end
+					end
+					
+					function onInit()
+						super.onInit();
+						onValueChanged();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--C2 stat-->
+			<cycler_ability name="branch3_ability2_stat" source="skills.ability.branch3_ability2_stat">
+				<anchored width="40" height="20">
+					<top parent="branch3_ability2_value" offset="0" />
+					<right parent="branch3_ability2_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--C2 name-->
+			<stringu name="branch3_ability2_name" source="skills.ability.branch3_ability2_name">
+				<anchored to="branch3_ability1_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch2_ability2_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch3_ability2_editablewidget">
+				<anchored to="branch3_ability2_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			
+			<!--C3 hidden description-->
+			<simplestring name="branch3_ability3_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<!--C3 value-->
+			<number_skill_rollable name="branch3_ability3_value" source="skills.ability.branch3_ability3_value">
+				<anchored width="30" height="20">
+					<top parent="branch3_ability2_stat" offset="25" />
+					<right parent="rightanchor" anchor="left" offset="-10" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performProfessionSkillRoll("3", "3")
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+
+					function onInit()
+						super.onInit();
+					end
+				</script>
+			</number_skill_rollable>
+			<!--C3 stat-->
+			<cycler_ability name="branch3_ability3_stat" source="skills.ability.branch3_ability3_stat">
+				<anchored width="40" height="20">
+					<top parent="branch3_ability3_value" offset="0" />
+					<right parent="branch3_ability3_value" anchor="left" offset="-10" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+			<!--C3 name-->
+			<stringu name="branch3_ability3_name" source="skills.ability.branch3_ability3_name">
+				<anchored to="branch3_ability2_name" height="20">
+					<top offset="25" />
+					<left offset="0" />
+					<right parent="branch2_ability2_stat" anchor="left" offset="-10" />
+				</anchored>
+				<default>
+					<textres>char_label_defaultSkillName</textres>
+				</default>
+				<disabled/>
+			</stringu>
+			<!--editable widget-->
+			<genericcontrol name="branch3_ability3_editablewidget">
+				<anchored to="branch3_ability3_name" width="12" height="12">
+					<top offset="5" />
+					<right anchor="left" offset="-3" />
+				</anchored>
+				<icon>icon_edit</icon>
+				<tooltip textres="char_tooltip_skilllabeliseditable"/>
+				<invisible/>
+			</genericcontrol>
+			
+			<!-- profession needs to be here to be init last-->
+			<hs name="profession" source="identite.profession">
+				<script>				
+					function onValueChanged()
+						window.onProfessionValueChanged(getValue());
+					end
+					function onInit()
+						window.onProfessionValueChanged(getValue());
+					end
+					
+				</script>
+			</hs> 
+		</sheetdata>
+	</windowclass>
+
+	<!-- SKILL LIST CONTENT-->
+	<windowclass name="char_skilllist_details">
+		<sheetdata>
+			<genericcontrol name="rightanchor">
+				<anchored width="0" height="0">
+					<top offset="10" />
+					<right offset="0" />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+
+			<genericcontrol name="skilllist_headers">
+				<anchored>
+					<top parent="rightanchor" anchor="bottom" offset="0" />
+					<bottom parent="rightanchor" anchor="bottom" offset="26" />
+					<left offset="5"/>
+					<right offset="-5" />
+				</anchored>
+				<frame name="headertitle" />
+			</genericcontrol>
+
+			<simplestring name="skilllist_sortCriteria">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+
+			<basicnumber name="hasProfessionChanged_skilllist" source="hasProfessionChanged">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<default>0</default>
+				<readonly />
+				<invisible />
+				<script>
+					function onValueChanged()
+						window.skills.onInit();
+					end
+				</script>
+			</basicnumber>
+
+			<!-- "is class skill" widget-->
+			<genericcontrol to="rightanchor" name="skill_classSkillwidget">
+				<anchored position="insidetopleft" offset="5,10" width="20" height="20"/>
+				<icon>spellclass_ritual</icon>
+				<tooltip textres="char_tooltip_isclassskill"/>
+			</genericcontrol>
+
+			<label name="skillname_label">
+				<anchored position="insidetopleft" offset="35,10" />
+				<static textres="char_skillname_label" />
+				<script>
+					function onClickDown(button, x, y)
+						if(window.skilllist_sortCriteria.getValue()=="name_asc") then
+							window.skilllist_sortCriteria.setValue("name_desc");
+						else
+							window.skilllist_sortCriteria.setValue("name_asc");
+						end
+
+						window.skills.applySort();
+					end
+					
+					function onClickRelease(button, x, y)
+					end
+				</script>
+			</label>
+
+			<label>
+				<anchored to="rightanchor" width="70">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<center />
+				<static textres="char_label_skillstat" />
+				<script>
+					function onClickDown(button, x, y)
+						if(window.skilllist_sortCriteria.getValue()=="stat_asc") then
+							window.skilllist_sortCriteria.setValue("stat_desc");
+						else
+							window.skilllist_sortCriteria.setValue("stat_asc");
+						end
+						window.skills.applySort();
+					end
+					
+					function onClickRelease(button, x, y)
+					end
+				</script>
+			</label>
+			<label>
+				<anchored to="rightanchor" width="44">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="char_label_skilltotal" />
+				<center />
+			</label>
+			<label>
+				<anchored to="rightanchor" width="32">
+					<top />
+					<right anchor="left" relation="relative" offset="-15" />
+				</anchored>
+				<static textres="char_label_skillmisc" />
+				<center />
+			</label>
+			<label>
+				<anchored to="rightanchor" width="42">
+					<top />
+					<right anchor="left" relation="relative" offset="-15" />
+				</anchored>
+				<center />
+				<static textres="char_label_skillranks" />
+			</label>
+
+			<list_skills name="skills">
+				<anchored>
+					<top offset="35" />
+					<left />
+					<right />
+				</anchored>
+				<datasource>.skills.skillslist</datasource>
+				<sortby><control>name</control></sortby>
+				<class>char_skill</class>
+			</list_skills>
+
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="char_skill">
+		<script file="campaign/scripts/char_skill.lua" />
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<genericcontrol name="leftanchor">
+				<anchored width="0" height="0">
+					<top offset="0"/>
+					<left offset="25" />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+			<genericcontrol name="rightanchor">
+				<anchored width="0" height="0">
+					<top offset="00" />
+					<right />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+
+			<!--hidden fields-->
+			<simplestring name="id">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<simplestring name="skill_desc">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</simplestring>
+			<basicnumber name="isDoubleIP">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</basicnumber>
+			<basicnumber name="isArmorImpacted">
+				<anchored width="0" height="0">
+					<top offset="0" />
+					<left offset="0" />
+				</anchored>
+				<readonly />
+				<invisible />
+			</basicnumber>
+			
+			<!-- Is Class Skill checkbox -->
+			<button_checkbox name="isClassSkill">
+				<anchored width="12" height="12">
+					<top offset="5" />
+					<right parent="leftanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<tooltip textres="char_tooltip_isclassskill"/>
+				<script>
+					function onInit()
+						window.onIsClassSkillChanged();
+					end
+					function onValueChanged()
+						window.onIsClassSkillChanged();
+					end
+				</script>
+			</button_checkbox>
+
+			<!-- Checkbox (unused) -->
+			<button_checkbox name="skill_use">
+				<anchored width="12" height="12">
+					<top offset="5" />
+					<right parent="leftanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<invisible />
+			</button_checkbox>
+
+			<!-- See details -->
+			<buttoncontrol name="activatedetail">
+				<anchored to="rightanchor" width="15" height="20">
+					<top/>
+					<right anchor="left" relation="relative" offset="0" />
+				</anchored>
+				<state icon="button_details" />
+				<cursor hover="hand" />
+				<script>
+					function onButtonPress()
+						Interface.openWindow("reference_skill", window.getDatabaseNode());
+					end
+				</script>
+			</buttoncontrol>
+
+			<!-- Associated stat -->
+			<cycler_ability name="skill_stat">
+				<anchored to="rightanchor" width="40" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<disabled/>
+			</cycler_ability>
+
+			<!-- + -->
+			<label>
+				<anchored to="rightanchor" width="15" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="char_special_plus" />
+				<center/>
+			</label>
+
+			<!-- Total (rollable) -->
+			<number_skill_rollable name="skill_value">
+				<anchored to="rightanchor" width="30" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<readonly />
+				<script>
+					function action(draginfo)
+						window.performSkillRoll();
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+					
+					function onDoubleClick(x,y)
+						return action();
+					end
+				</script>
+			</number_skill_rollable>
+
+			<!-- = -->
+			<label>
+				<anchored to="rightanchor" width="15" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="char_special_equal" />
+				<center/>
+			</label>
+
+			<!-- Misc bonus -->
+			<basicnumber name="skill_bonus">
+				<anchored to="rightanchor" width="30" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onSkillValueChanged();
+					end
+					function onInit()
+						window.onSkillValueChanged();
+					end
+				</script>
+				<max>100</max>
+			</basicnumber>
+
+			<!-- + -->
+			<label>
+				<anchored to="rightanchor" width="15" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="char_special_plus" />
+				<center/>
+			</label>
+
+			<!-- Rank -->
+			<basicnumber name="skill_rank">
+				<anchored to="rightanchor" width="30" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onSkillValueChanged();
+					end
+					function onInit()
+						window.onSkillValueChanged();
+					end
+				</script>
+				<max>100</max>
+			</basicnumber>
+
+			<!-- armor widget-->
+			<genericcontrol to="rightanchor" name="skill_armorwidget">
+				<anchored width="8" height="9">
+					<top offset="5"/>
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</genericcontrol>
+
+			<!-- double IP-->
+			<label name="skill_doubleIPLabel">
+				<anchored to="rightanchor" width="20" height="20">
+					<top />
+					<right anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="char_label_skilldoubleIP" />
+				<invisible/>
+				<center/>
+			</label>
+
+			<!-- Skill name-->
+			<simplestring name="name">
+				<anchored height="20">
+					<top offset="0" />
+					<left parent="leftanchor" anchor="right" relation="relative" offset="10" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<readonly />
+			</simplestring>
+		</sheetdata>
+	</windowclass>	
+
+	<!-- Skill description-->
+	<windowclass name="reference_skill">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="300" height="200" />
+		</placement>
+		<sizelimits>
+			<dynamic />
+		</sizelimits>
+		<tooltip field="title"/>
+		<nodelete />
+		<playercontrol />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				title.setValue(DB.getValue(getDatabaseNode(), "name", "skill name"));
+				skill_desc.setValue(DB.getValue(getDatabaseNode(), "skill_desc", "skill desc"));
+			end
+		</script>
+		<sheetdata>
+			<windowtitlebar name="title">
+			</windowtitlebar>
+
+			<simplestring name="skill_desc">
+				<anchored>
+					<top parent="title" anchor="bottom" offset="15" />
+					<left offset="35" />
+					<right offset="-35" />
+					<bottom offset="-32" />
+				</anchored>
+				<frame name="groupbox" offset="20,17,20,17" />
+				<multilinespacing>20</multilinespacing>
+				<disabled />
+			</simplestring>
+
+			<scrollbar>
+				<anchored to="skill_desc" />
+				<target>skill_desc</target>
+			</scrollbar>
+			
+			<resize_referencepage />
+			<close_referencepage />
+		</sheetdata>
+	</windowclass>
+</root>

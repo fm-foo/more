@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+  Please see the license.html file included with this distribution for
+  attribution and copyright information.
+-->
+
+<root>
+	<template name="list_editor">
+		<windowlist name="list">
+			<anchored>
+				<top parent="columnanchor" anchor="bottom" relation="relative" offset="22" />
+				<left />
+				<right />
+			</anchored>
+			<allowdelete />
+			<child></child>
+			<child><backcolor>1A40301E</backcolor></child>
+			<noscroll />
+			<script>
+				function onInit()
+					registerMenuItem(Interface.getString("list_menu_createitem"), "insert", 5);
+				end
+
+				function onMenuSelection(selection)
+					if selection == 5 then
+						self.addEntry(true);
+					end
+				end
+
+				function onListChanged()
+					update();
+				end
+
+				function update()
+					local bEditMode = (window.list_iedit.getValue() == 1);
+					for _,w in pairs(getWindows()) do
+						w.idelete.setVisibility(bEditMode);
+					end
+				end
+
+				function addEntry(bFocus)
+					return createWindow();
+				end
+			</script>
+		</windowlist>
+	</template>
+
+	<template name="enhancement_list_editor">
+		<windowlist name="enhancement_list">
+			<anchored>
+				<top parent="columnanchor" anchor="bottom" relation="relative" offset="22" />
+				<left />
+				<right />
+			</anchored>
+			<allowdelete />
+			<child></child>
+			<child><backcolor>1A40301E</backcolor></child>
+			<noscroll />
+			<script>
+				function onInit()
+					registerMenuItem(Interface.getString("list_menu_createitem"), "insert", 5);
+				end
+
+				function onMenuSelection(selection)
+					if selection == 5 then
+						self.addEntry(true);
+					end
+				end
+
+				function onListChanged()
+					update();
+				end
+
+				function update()
+					local bEditMode = (window.enhancement_list_iedit.getValue() == 1);
+					for _,w in pairs(getWindows()) do
+						w.enhancement_list_idelete.setVisibility(bEditMode);
+					end
+				end
+
+				function addEntry(bFocus)
+					return createWindow();
+				end
+			</script>
+		</windowlist>
+	</template>
+	<template name="button_item_armor">
+		<button_text_sm>
+			<anchored to="buttonanchor" width="60">
+				<top />
+				<left anchor="right" relation="relative" offset="5" />
+			</anchored>
+			<state textres="library_recordview_label_item_armor" />
+			<script>
+				function onButtonPress()
+					local w = Interface.findWindow("reference_groupedlist", "reference.armor");
+					if w then
+						Interface.toggleWindow("reference_groupedlist", "reference.armor");
+					else
+						w = Interface.openWindow("reference_groupedlist", "reference.armor");
+						w.init({ sRecordType = "item", sListView = "armor" });
+					end
+				end
+			</script>
+		</button_text_sm>
+	</template>
+	<template name="button_item_weapons">
+		<button_text_sm>
+			<anchored to="buttonanchor" width="60">
+				<top />
+				<left anchor="right" relation="relative" offset="5" />
+			</anchored>
+			<state textres="library_recordview_label_item_weapon" />
+			<script>
+				function onButtonPress()
+					local w = Interface.findWindow("reference_groupedlist", "reference.weapon");
+					if w then
+						Interface.toggleWindow("reference_groupedlist", "reference.weapon");
+					else
+						w = Interface.openWindow("reference_groupedlist", "reference.weapon");
+						w.init({ sRecordType = "item", sListView = "weapon" });
+					end
+				end
+			</script>
+		</button_text_sm>
+	</template>
+	<template name="button_item_crafting_components">
+		<button_text_sm>
+			<anchored to="buttonanchor" width="90">
+				<top />
+				<left anchor="right" relation="relative" offset="5" />
+			</anchored>
+			<state textres="library_recordview_label_item_crafting_components" />
+			<script>
+				function onButtonPress()
+					local w = Interface.findWindow("reference_groupedlist", "reference.craftingcomponents");
+					if w then
+						Interface.toggleWindow("reference_groupedlist", "reference.craftingcomponents");
+					else
+						w = Interface.openWindow("reference_groupedlist", "reference.craftingcomponents");
+						w.init({ sRecordType = "item", sListView = "crafting_components" });
+					end
+				end
+			</script>
+		</button_text_sm>
+	</template>
+	<template name="button_item_crafting_diagrams">
+		<button_text_sm>
+			<anchored to="buttonanchor" width="80">
+				<top />
+				<left anchor="right" relation="relative" offset="5" />
+			</anchored>
+			<state textres="library_recordview_label_item_crafting_diagrams" />
+			<script>
+				function onButtonPress()
+					local w = Interface.findWindow("reference_groupedlist", "reference.craftingdiagrams");
+					if w then
+						Interface.toggleWindow("reference_groupedlist", "reference.craftingdiagrams");
+					else
+						w = Interface.openWindow("reference_groupedlist", "reference.craftingdiagrams");
+						w.init({ sRecordType = "item", sListView = "crafting_diagrams" });
+					end
+				end
+			</script>
+		</button_text_sm>
+	</template>
+	<template name="button_item_substances">
+		<button_text_sm>
+			<anchored to="buttonanchor" width="70">
+				<top />
+				<left anchor="right" relation="relative" offset="5" />
+			</anchored>
+			<state textres="library_recordview_label_item_substances" />
+			<script>
+				function onButtonPress()
+					local w = Interface.findWindow("reference_groupedlist", "reference.substances");
+					if w then
+						Interface.toggleWindow("reference_groupedlist", "reference.substances");
+					else
+						w = Interface.openWindow("reference_groupedlist", "reference.substances");
+						w.init({ sRecordType = "item", sListView = "substances" });
+					end
+				end
+			</script>
+		</button_text_sm>
+	</template>
+</root>

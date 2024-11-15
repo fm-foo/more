@@ -8,7 +8,7 @@
 <root>
 	<windowclass name="dicepool">
 		<sizelimits>
-			<minimum width="64" height="57" />
+			<minimum width="64" height="400" />
 		</sizelimits>
 		<noclose />
 		<script>

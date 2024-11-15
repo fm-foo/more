@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="npc">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="525" height="550" />
+		</placement>
+		<sizelimits>
+			<minimum width="525" height="550" />
+			<dynamic />
+		</sizelimits>
+		<tooltip field="name" />
+		<nodelete />
+		<script file="campaign/scripts/npc.lua" />
+		<sheetdata>
+			<!--header (name, lock, id, token)-->
+			<sub_record_header name="header">
+				<class>npc_header</class>
+			</sub_record_header>
+
+			<frame_record_content_tabbed name="contentframe">
+				<anchored>
+					<bottom offset="-65" />
+				</anchored>
+			</frame_record_content_tabbed>
+
+			<subwindow_record name="main_creature">
+				<class>npc_main</class>
+			</subwindow_record>
+			<subwindow name="combat">
+				<bounds>10,65,-1,-20</bounds>
+				<class>npc_combat</class>
+			</subwindow>
+			<subwindow name="magic">
+				<bounds>10,65,-1,-20</bounds>
+				<class>charsheet_magic</class>
+			</subwindow>
+			<ft_record name="text">
+				<anchored to="contentframe" position="over" />
+				<invisible />
+			</ft_record>
+
+			<scrollbar_record>
+				<target>main_creature</target>
+			</scrollbar_record>
+			<scrollbar_record>
+				<target>text</target>
+			</scrollbar_record>
+
+			<tabs_recordsheet>
+				<tab>
+					<icon>tab_main</icon>
+					<subwindow>main_creature</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_combat</icon>
+					<subwindow>combat</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_magic</icon>
+					<subwindow>magic</subwindow>
+				</tab>
+				<tab>
+					<icon>tab_notes</icon>
+					<subwindow>text</subwindow>
+				</tab>
+			</tabs_recordsheet>
+			
+			<frame_record_lower name="controlframe" />
+			
+			<resize_recordsheet />
+			<close_recordsheet />
+		</sheetdata>
+	</windowclass>
+
+	<!--Main tab-->
+	<windowclass name="npc_main">
+		<margins control="0,0,0,2" />
+		<script file="campaign/scripts/npc_main.lua" />
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<!-- Basic information -->
+			<label_column name="nonid_name_label">
+				<static textres="npc_label_unidentified" />
+			</label_column>
+			<string_columnh name="nonid_name" />
+
+			<label name="autocalculation_label">
+				<anchored to="nonid_name_label" width="100">
+					<top />
+					<right anchor="right" offset="335" />
+				</anchored>
+				<static textres="npc_label_autocalculation" />
+			</label>
+			<buttonfield name="autocalculation" source="attributs.autocalculation">
+				<anchored to="autocalculation_label" width="20" height="20">
+					<top />
+					<right anchor="right" offset="20" />
+				</anchored>
+				<state icon="button_toggle_on" tooltipres="npc_tooltip_autocalculation" />
+				<state icon="button_toggle_off" tooltipres="npc_tooltip_autocalculation" />
+				<script>
+					function onValueChanged()
+						window.updateReadOnly();
+						window.updateStats();
+					end
+				</script>
+			</buttonfield>
+
+			<line_column name="divider" />
+			
+			<label_column name="type_label">
+				<static textres="npc_label_type" />
+			</label_column>
+			<combobox name="npctype">
+				<anchored width="100" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="97" />
+				</anchored>
+				<listdirection>down</listdirection>
+				<script>
+					function onInit()
+						super.onInit();
+						add(Interface.getString("npc_type_humanoid"));
+						add(Interface.getString("npc_type_animal"));
+						add(Interface.getString("npc_type_beast"));
+						add(Interface.getString("npc_type_cursed"));
+						add(Interface.getString("npc_type_draconid"));
+						add(Interface.getString("npc_type_elementa"));
+						add(Interface.getString("npc_type_hybrid"));
+						add(Interface.getString("npc_type_insectoid"));
+						add(Interface.getString("npc_type_necrophage"));
+						add(Interface.getString("npc_type_ogroid"));
+						add(Interface.getString("npc_type_relict"));
+						add(Interface.getString("npc_type_specter"));
+						add(Interface.getString("npc_type_vampire"));
+					end
+				</script>
+				<unsorted />
+			</combobox>
+			
+			<label_column name="threat_label">
+				<static textres="npc_label_threat" />
+			</label_column>
+			<combobox name="threat1">
+				<anchored width="100" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="97" />
+				</anchored>
+				<listdirection>down</listdirection>
+				<script>
+					function onInit()
+						super.onInit();
+						add(Interface.getString("npc_threat_easy"));
+						add(Interface.getString("npc_threat_medium"));
+						add(Interface.getString("npc_threat_hard"));
+					end
+				</script>
+				<unsorted />
+			</combobox>
+			<combobox name="threat2">
+				<anchored width="100" height="20">
+					<top parent="threat1" anchor="top" relation="relative"/>
+					<left parent="threat1" anchor="right" offset="10" />
+				</anchored>
+				<listdirection>down</listdirection>
+				<script>
+					function onInit()
+						super.onInit();
+						add(Interface.getString("npc_threat_simple"));
+						add(Interface.getString("npc_threat_complex"));
+						add(Interface.getString("npc_threat_difficult"));
+					end
+				</script>
+				<unsorted />
+			</combobox>
+
+			<label_column name="resistance_label">
+				<static textres="npc_label_resistances" />
+			</label_column>
+			<string_columnh name="resistances"/>
+
+			<label_column name="vulnerabilities_label">
+				<static textres="npc_label_vulnerabilities" />
+			</label_column>
+			<string_columnh name="vulnerabilities"/>
+
+			<label_column name="abilities_label">
+				<static textres="npc_label_abilities" />
+			</label_column>
+			<string_columnh name="abilities"/>
+
+			<label_column name="init_label">
+				<static textres="npc_label_initiative" />
+			</label_column>
+			<number_derivedstat_rollable name="init_combat" source="attributs.reflex">
+				<anchored width="40" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="97" />
+				</anchored>
+				<displaysign /> 
+				<script>
+					function action(draginfo)
+						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+						ActionInit.performRoll(draginfo, rActor);
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onDoubleClick(x,y)
+						return action();
+					end
+				</script>
+			</number_derivedstat_rollable>
+	
+			<number_charstatbase name="woundthreshold" source="attributs.woundthreshold">
+				<anchored to="init_combat" position="right" offset="170,0" width="30" height="20" />
+			</number_charstatbase>
+			<label name="woundthreshold_label">
+				<anchored to="woundthreshold" position="right" offset="-130,0" />
+				<static textres="npc_label_woundthreshold" />
+			</label>
+			<buttonfield name="woundthreshold_state" source="attributs.woundthreshold_state">
+				<anchored to="woundthreshold" position="right" offset="5,0" width="10" height="10" />
+				<state icon="button_woundthreshold_off" tooltipres="button_woundthreshold_off" />
+				<state icon="button_woundthreshold_on" tooltipres="button_woundthreshold_on" />
+				<default>0</default>
+				<script>
+					function onValueChanged()
+						window.onWoundThresholdStateChanged(window.getDatabaseNode());
+					end
+				</script>
+			</buttonfield>
+
+			<label_column name="hp_label">
+				<static textres="char_derivedstatslabel_hit_points" />
+			</label_column>
+			<number_charstatbase name="hit_points" source="attributs.hit_points">
+				<anchored width="25" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="97" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onHPChanged();
+					end
+				</script>
+			</number_charstatbase>
+			<label name="hit_points_divider">
+				<anchored to="hit_points">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<static textres="char_special_divide" />
+			</label>
+			<number_charstatbase name="hit_pointsmax" source="attributs.hit_pointsmax">
+				<anchored to="hit_points_divider" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+
+			<number_charstatbase name="stamina" source="attributs.stamina">
+				<anchored to="hit_points_divider" position="right" offset="172,0" width="25" height="20" />
+			</number_charstatbase>
+			<label name="stamina_divider">
+				<anchored to="stamina">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<static textres="char_special_divide" />
+			</label>
+			<number_charstatbase name="staminamax" source="attributs.staminamax">
+				<anchored to="stamina_divider" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label name="stamina_label">
+				<anchored to="stamina" position="right" offset="-130,0" />
+				<static textres="char_derivedstatslabel_stamina" />
+			</label>
+			
+			
+			<!-- STATS : INT, REF, DEX, BODY, SPD, EMP, CRA, WILL, LUCK -->
+			<header_npc>
+				<static textres="npc_header_stats" />
+			</header_npc>
+
+			<number_charstatbase name="intelligence" source="attributs.intelligence">
+				<anchored width="25" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
+					<left offset="5" />
+				</anchored>
+			</number_charstatbase>
+			<number_charstatbase name="intelligence_backup" source="attributs.intelligence_backup">
+				<anchored width="25" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
+					<left offset="5" />
+				</anchored>
+				<invisible/>
+			</number_charstatbase>
+			<label_fieldtop name="intelligence_label">
+				<anchored to="intelligence" />
+				<static textres="int" />
+			</label_fieldtop>
+			<number_charstatbase name="reflex" source="attributs.reflex">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<number_charstatbase name="reflex_backup" source="attributs.reflex_backup">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<invisible/>
+			</number_charstatbase>
+			<label_fieldtop name="reflex_label">
+				<anchored to="reflex" />
+				<static textres="ref" />
+			</label_fieldtop>
+			<number_charstatbase name="dexterity" source="attributs.dexterity">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<number_charstatbase name="dexterity_backup" source="attributs.dexterity_backup">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<invisible/>
+			</number_charstatbase>
+			<label_fieldtop name="dexterity_label">
+				<anchored to="dexterity" />
+				<static textres="dex" />
+			</label_fieldtop>
+			<number_charstatbase name="body" source="attributs.body">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onBodyChanged();
+					end
+				</script>
+			</number_charstatbase>
+			<label_fieldtop name="body_label">
+				<anchored to="body" />
+				<static textres="bod" />
+			</label_fieldtop>
+			<number_charstatbase name="speed" source="attributs.speed">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onSpeedChanged();
+					end
+				</script>
+			</number_charstatbase>
+			<label_fieldtop name="speed_label">
+				<anchored to="speed" />
+				<static textres="spd" />
+			</label_fieldtop>
+			<number_charstatbase name="empathy" source="attributs.empathy">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="empathy_label">
+				<anchored to="empathy" />
+				<static textres="emp" />
+			</label_fieldtop>
+			<number_charstatbase name="crafting" source="attributs.crafting">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="crafting_label">
+				<anchored to="crafting" />
+				<static textres="cra" />
+			</label_fieldtop>
+			<number_charstatbase name="will" source="attributs.will">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onWillChanged();
+					end
+				</script>
+			</number_charstatbase>
+			<number_charstatbase name="will_backup" source="attributs.will_backup">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<invisible/>
+			</number_charstatbase>
+			<label_fieldtop name="will_label">
+				<anchored to="will" />
+				<static textres="wil" />
+			</label_fieldtop>
+			<number_charstatbase name="vigor" source="attributs.vigor">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="vigor_label">
+				<anchored to="vigor" />
+				<static textres="vig" />
+			</label_fieldtop>
+			<number_charstatbase name="luck" source="attributs.luck">
+				<anchored to="intelligence" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="luck_label">
+				<anchored to="luck" />
+				<static textres="lck" />
+			</label_fieldtop>
+			<!--derived stats-->
+			<number_stat_rollable name="stun" source="attributs.stun">
+				<anchored width="25" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
+					<left offset="5" />
+				</anchored>
+				<script>
+					function action(draginfo)
+						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
+						
+						ActionSave.performRoll(draginfo, rActor, "stun");
+						return true;
+					end
+					
+					function onDragStart(button, x, y, draginfo)
+						return action(draginfo);
+					end
+
+					function onDoubleClick(x,y)
+						return action();
+					end
+				</script>
+			</number_stat_rollable>
+			<label_fieldtop name="Stun_label">
+				<anchored to="stun" />
+				<static textres="npc_label_stun" />
+			</label_fieldtop>
+			<number_charstatbase name="run" source="attributs.run">
+				<anchored to="stun" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="run_label">
+				<anchored to="run" />
+				<static textres="npc_label_run" />
+			</label_fieldtop>
+			<number_charstatbase name="leap" source="attributs.leap">
+				<anchored to="run" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="leap_label">
+				<anchored to="leap" />
+				<static textres="npc_label_leap" />
+			</label_fieldtop>
+			<number_charstatbase name="encumbrancemax" source="attributs.encumbrancemax">
+				<anchored to="leap" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="encumbrance_label">
+				<anchored to="encumbrancemax" />
+				<static textres="npc_label_encumbrance" />
+			</label_fieldtop>
+			<number_charstatbase name="recovery" source="attributs.recovery">
+				<anchored to="encumbrancemax" width="25" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</number_charstatbase>
+			<label_fieldtop name="recovery_label">
+				<anchored to="recovery" />
+				<static textres="npc_label_recovery" />
+			</label_fieldtop>
+			
+			<!--invisible stats-->
+			<number_derivedstat name="meleebonusdamage" source="attributs.meleebonusdamage">
+				<anchored to="recovery" position="over" offset="0,0" height="1" />
+				<invisible/>
+			</number_derivedstat>
+			<dice_modifier name="kick" source="attributs.kick">
+				<anchored to="recovery" position="over" offset="0,0" height="1" />
+				<invisible/>
+				<modifierfield>attributs.kick_modifier</modifierfield>
+			</dice_modifier>
+			<dice_modifier name="punch" source="attributs.punch">
+				<anchored to="recovery" position="over" offset="0,0" height="1" />
+				<invisible/>
+				<modifierfield>attributs.punch_modifier</modifierfield>
+			</dice_modifier>
+
+			<!-- SKILLS -->
+			<header_npc>
+				<static textres="npc_header_skills" />
+			</header_npc>
+
+			<string_columnh name="skills">
+				<anchored>
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="5" />
+					<right offset="-30" />
+				</anchored>
+				<script file="campaign/scripts/npc_skill.lua" />
+			</string_columnh>
+			<genericcontrol>
+				<anchored to="skills" width="20" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<icon>button_details</icon>
+				<tooltip textres="npc_tooltip_skills"/>
+			</genericcontrol>
+			
+			<!-- ECOLOGY -->
+			<header_npc>
+				<static textres="npc_header_ecology" />
+			</header_npc>
+			
+			<label_column name="height_label">
+				<static textres="npc_label_height" />
+			</label_column>
+			<string_columnh name="height" />
+
+			<label_column name="weight_label">
+				<static textres="npc_label_weight" />
+			</label_column>
+			<string_columnh name="weight" />
+
+			<label_column name="environment_label">
+				<static textres="npc_label_environment" />
+			</label_column>
+			<string_columnh name="environment" />
+
+			<label_column name="intelligencelevel_label">
+				<static textres="npc_label_intelligence" />
+			</label_column>
+			<string_columnh name="intelligencelevel" />
+
+			<label_column name="organization_label">
+				<static textres="npc_label_organization" />
+			</label_column>
+			<string_columnh name="organization" />
+
+			<label_column name="loot_label">
+				<static textres="npc_label_loot" />
+			</label_column>
+			<string_columnh name="loot" />
+
+			<label_column name="bounty_label">
+				<static textres="npc_label_bounty" />
+			</label_column>
+			<string_columnh name="bounty" />
+		</sheetdata>
+	</windowclass>
+
+</root>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+<root>
+	<windowclass name="combattracker_host" merge="join">
+		<placement>
+			<size width="600" />
+		</placement>
+		<sizelimits>
+			<minimum width="600" />
+		</sizelimits>	
+		<!-- <script file="ct/scripts/ct_window_dnd.lua" /> -->
+		<sheetdata>
+			<label_ct_right name="label_stamina" insertbefore="label_init">
+				<static textres="ct_label_stamina" />
+				<tooltip textres="ct_tooltip_stamina" />
+			</label_ct_right>
+			<label_ct_right name="label_hp" insertbefore="label_init">
+				<static textres="hp" />
+				<tooltip textres="hitpoints" />
+			</label_ct_right>
+		</sheetdata>
+	</windowclass>
+</root>
